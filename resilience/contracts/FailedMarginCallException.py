@@ -1,0 +1,2 @@
+class FailedMarginCallException(Exception):
+    pass
