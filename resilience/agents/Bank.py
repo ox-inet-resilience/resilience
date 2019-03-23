@@ -169,6 +169,12 @@ class LeveragedInst(Institution):
         if not self.isaBank:
             self.prepare_future_margin_call()
 
+        # If CET1E becomes negative as a result of fulfiling obligation, do not do anything anymore
+        CET1E = self.get_CET1E()
+        if CET1E < 0:
+            print(self.get_name(), 'has negative CET1E')
+            return
+
         # 2. Raise liquidity to meet less immediate matured requests
         for timeIndex in range(self.model.parameters.TIMESTEPS_TO_PAY, len(cashCommitments)):
             balance = self._analyze_expected_balance_sheet(
@@ -176,12 +182,11 @@ class LeveragedInst(Institution):
                 self.raise_liquidity_with_pecking_order)
             minimumSpareBalanceInThePeriod = min(minimumSpareBalanceInThePeriod, balance)
 
-        # 3. Pay off liabilities to delever
-        # accuracy note: step 1 and 2 do not affect CET1E except the decrease
-        # caused by price loss. Taking into account of price loss would require a huge
-        # change in the code beyond the features provided by economicsl.
-        amountToDelever = None
         if use_LEVERAGE:
+            # 3. Pay off liabilities to delever
+            # accuracy note: step 1 and 2 do not affect CET1E except the decrease
+            # caused by price loss. Taking into account of price loss would require a huge
+            # change in the code beyond the features provided by economicsl.
             amountToDelever = self.leverage_constraint.get_amount_to_delever()
             deLever = min(
                 minimumSpareBalanceInThePeriod,
@@ -192,23 +197,17 @@ class LeveragedInst(Institution):
                 amountToDelever -= deLever
             balance -= deLever
 
-        logging.debug((
-            f"\nOur expected balance after delevering and including long term obligations is now {balance}"
-            f", we have {amountToDelever} left to delever"))
-
-        # 4. Raise liquidity to delever later
-        if use_LEVERAGE and (balance < amountToDelever):
+            # 4. Raise liquidity to delever later
             # We will use up all our remaining liquidity to delever
-
             # in order to meet our long-term cash commitments and non-urgent liquidity needs
-            # we will raise liquidity: `amountToDelever - balance`
-            balance += self.raise_liquidity_with_pecking_order(amountToDelever - balance)
+            if balance < amountToDelever:
+                balance += self.raise_liquidity_with_pecking_order(amountToDelever - balance)
 
         if self.isaBank:
             # 5. Raise liquidity to reach RWCR target
             cash_raised_RWA = 0
             if use_RWA and self.rwa_constraint.is_below_buffer():
-                cash_raised_RWA = self.raise_liquidity_with_pecking_order_on_RWA()
+                cash_raised_RWA = self.raise_liquidity_with_pecking_order_on_RWA(CET1E)
 
             # 6. Raise liquidity to reach LCR target
             if use_LCR:
@@ -224,7 +223,7 @@ class LeveragedInst(Institution):
         else:
             # 5. HF raise liquidity to reach cash target
             A = self.get_ledger().get_asset_value()
-            if A == 0:
+            if A == 0:  # to make sure there is no divide-by-zero
                 return
             uec = self.get_ue_cash()
             if uec / A < 0.9 * self.uec_fraction_initial:
@@ -252,7 +251,7 @@ class LeveragedInst(Institution):
                 otas.append(saa)
         return cbas, otas, eqas
 
-    def raise_liquidity_with_pecking_order_on_RWA(self, balance=0):
+    def raise_liquidity_with_pecking_order_on_RWA(self, CET1E, balance=0):
         """
         This is an action with pecking order of:
         1. pull funding
@@ -271,8 +270,6 @@ class LeveragedInst(Institution):
         eq_RWA_weight = self.RWA_weights['equities']
         otradable_RWA_weight = self.RWA_weights['othertradables']
         rwa = self.rwa_constraint.get_RWA()
-        CET1E = self.get_CET1E()
-
         assert CET1E >= 0, CET1E
         assert rwa >= 0, rwa
 
@@ -409,10 +406,6 @@ class Bank(LeveragedInst):
 
     def get_RWA_ratio(self, cached_equity=None):
         return self.rwa_constraint.get_RWA_ratio(cached_equity)
-
-    def revalue_all_loans(self):
-        for loan in self.get_ledger().get_assets_of_type(Loan):
-            loan.reValueLoan()
 
     def trigger_default(self):
         super().trigger_default()

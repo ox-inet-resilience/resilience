@@ -35,15 +35,15 @@ class RWA_Constraint(object):
         ldg = self.me.get_ledger()
         weights = self.me.RWA_weights
         rw = 0
-        # tradables
+        # tradable assets
         # If a part of the asset has been marked for sale, do not include it
         # in the RWA calculation
         for tradable_type in ['equities', 'corpbonds', 'govbonds', 'othertradables']:
             rw += weights[tradable_type] * sum((a.quantity - a.putForSale_) * a.price for a in self.me.get_tradable_of_type(tradable_type))
 
-        # other
+        # other assets
         rw += weights['other'] * ldg.get_asset_value_of(Other)
-        # external
+        # external assets
         rw += weights['external'] * ldg.get_asset_value_of(TradableAsset, self.ASSETTYPE.EXTERNAL1)
         # loan
         rw += weights['loan'] * sum((l.get_value() - l.get_funding_already_pulled()) for l in ldg.get_assets_of_type(Loan))

@@ -32,25 +32,24 @@ TODO: sphinx this
 - \\sigma_{ij}: [s.getnShares() for s in inst.get_ledger().get_assets_of_type(Shares) if s.get_liability_party() == AM_i]
 - \\tilde{S_i}: \\eta * sum(\\sigma_{ij})
 
-The following equations hold:
-These will just be set as the initial condition of the FIs
+The following equations hold (these will just be set as the initial condition of the FIs):
 
-## Banks
+Banks:
 - A = C + T + I + R + Y + O (eqn 1)
 - L = D + \\bar{I} + \\bar{R} + \\bar{O} (eqn 2)
 
-## Hedge Funds
+Hedge Funds:
 - HF A = C + T + R + O
 - HF L = \\bar{R}
 
-## Asset Manager
+Asset Manager:
 - A_i = C_i + T_i + O_i
 - L_i = 0
 - E_i = \\tilde{S_{ij}}  # see the definition of this above
 
-## Asset Manager Investor
+Asset Manager Investor:
 - AM-investor A_i = S_i
 - AM-investor L_i = 0
 
-## Cash Provider
+Cash Provider:
 - CP A_i = R_i
