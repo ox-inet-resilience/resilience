@@ -213,13 +213,9 @@ class LeveragedInst(Institution):
         cbas = []
         otas = []
         eqas = []
-        n_gov_bonds = self.model.parameters.N_GOV_BONDS
-        n_corp_bonds = self.model.parameters.N_CORP_BONDS
-        n_equities = self.model.parameters.N_EQUITIES
-        n_otradables = self.model.parameters.N_OTHERTRADABLES
-        _corpbonds = range(n_gov_bonds + 1, n_gov_bonds + n_corp_bonds + 1)
-        _equities = range(n_gov_bonds + n_corp_bonds + 1, n_gov_bonds + n_corp_bonds + n_equities + 1)
-        _otradables = range(n_gov_bonds + n_corp_bonds + n_equities + 1, n_gov_bonds + n_corp_bonds + n_equities + n_otradables + 1)
+        _corpbonds = self.model.parameters.corpbonds_dict.values()
+        _equities = self.model.parameters.equities_dict.values()
+        _otradables = self.model.parameters.othertradables_dict.values()
         for saa in sa_actions:
             if saa.asset.assetType in _corpbonds:
                 cbas.append(saa)
