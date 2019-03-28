@@ -139,9 +139,7 @@ class LeveragedInst(Institution):
         i.e. St. Patrick Day's Algorithm
         """
         params = self.model.parameters
-        use_RWA = params.BANK_RWA_ON
         use_LEVERAGE = params.BANK_LEVERAGE_ON
-        use_LCR = params.BANK_LCR_ON
 
         balance = self.get_ue_cash()
         cashInflows = self.get_cash_inflows()
@@ -203,31 +201,11 @@ class LeveragedInst(Institution):
             if balance < amountToDelever:
                 balance += self.raise_liquidity_with_pecking_order(amountToDelever - balance)
 
-        if self.isaBank:
-            # 5. Raise liquidity to reach RWCR target
-            cash_raised_RWA = 0
-            if use_RWA and self.rwa_constraint.is_below_buffer():
-                cash_raised_RWA = self.raise_liquidity_with_pecking_order_on_RWA(CET1E)
-
-            # 6. Raise liquidity to reach LCR target
-            if use_LCR:
-                den = self.lcr_constraint.get_LCR_denominator()
-                HQLA = self.lcr_constraint.get_HQLA(cash_raised_RWA)
-                if HQLA / den < params.BANK_LCR_BUFFER:
-                    # We expect our HQLA
-                    # in the end to be below buffer level.
-                    # We will replenish to the target of
-                    # self.get_HQLA_target()
-                    liquidityToRaise = self.get_HQLA_target(den) - HQLA
-                    self.raise_liquidity_with_pecking_order(liquidityToRaise)
-        else:
-            # 5. HF raise liquidity to reach cash target
-            A = self.get_ledger().get_asset_value()
-            if A == 0:  # to make sure there is no divide-by-zero
-                return
-            uec = self.get_ue_cash()
-            if uec / A < 0.9 * self.uec_fraction_initial:
-                self.sell_assets_proportionally(self.uec_fraction_initial * A - uec)
+        # Each class that inherits from LeveragedInst will have a
+        # follow-up to the SPDA. In particular, the Bank will have
+        # 2 more steps, the HF will have 1 more step. The CET1E is
+        # returned here for caching purpose.
+        return CET1E
 
     def _get_decomposed_sellasset_actions(self):
         # This is used only in RWA targeting in raise_liquidity_with_pecking_order_on_RWA
@@ -455,3 +433,32 @@ class Bank(LeveragedInst):
                 raise DefaultException(self, DefaultException.TypeOfDefault.SOLVENCY)
 
         super().choose_actions()
+
+    def perform_liquidity_management(self):
+        """
+        Continuation of St. Patrick Day's Algorithm for bank
+        """
+        # CET1E is returned here in order to cache its
+        # computation
+        CET1E = super().perform_liquidity_management()
+
+        params = self.model.parameters
+        use_RWA = params.BANK_RWA_ON
+        use_LCR = params.BANK_LCR_ON
+
+        # 5. Raise liquidity to reach RWCR target
+        cash_raised_RWA = 0
+        if use_RWA and self.rwa_constraint.is_below_buffer():
+            cash_raised_RWA = self.raise_liquidity_with_pecking_order_on_RWA(CET1E)
+
+        # 6. Raise liquidity to reach LCR target
+        if use_LCR:
+            den = self.lcr_constraint.get_LCR_denominator()
+            HQLA = self.lcr_constraint.get_HQLA(cash_raised_RWA)
+            if HQLA / den < params.BANK_LCR_BUFFER:
+                # We expect our HQLA
+                # in the end to be below buffer level.
+                # We will replenish to the target of
+                # self.get_HQLA_target()
+                liquidityToRaise = self.get_HQLA_target(den) - HQLA
+                self.raise_liquidity_with_pecking_order(liquidityToRaise)

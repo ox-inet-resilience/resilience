@@ -69,3 +69,16 @@ class Hedgefund(LeveragedInst):
         _ot_repo.principal += cash_pledged
         if cash_pledged < remainder:
             raise FailedMarginCallException("Failed Margin Call")
+
+    def perform_liquidity_management(self):
+        """
+        Continuation of St. Patrick Day's Algorithm for HF
+        """
+        super().perform_liquidity_management()
+        # 5. HF raise liquidity to reach cash target
+        A = self.get_ledger().get_asset_value()
+        if A == 0:  # to make sure there is no divide-by-zero
+            return
+        uec = self.get_ue_cash()
+        if uec / A < 0.9 * self.uec_fraction_initial:
+            self.sell_assets_proportionally(self.uec_fraction_initial * A - uec)
