@@ -160,10 +160,9 @@ class Institution(Agent):
                          hasattr(asset, 'get_asset_type') and
                          asset.get_asset_type() == assetType]
 
-        if not (not assetsShocked):
-            for asset in assetsShocked:
-                self.get_ledger().devalue_asset(asset, asset.get_value() * fractionLost)
-                asset.update_price()
+        for asset in assetsShocked:
+            self.get_ledger().devalue_asset(asset, asset.get_value() * fractionLost)
+            asset.update_price()
 
     def get_matured_obligations(self):
         return self.mailbox.get_matured_obligations()
