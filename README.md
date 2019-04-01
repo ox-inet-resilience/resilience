@@ -7,3 +7,33 @@ Install the library by running on the root repository
 ```python
 python setup.py install
 ```
+
+# Components
+
+### 1. Institutions
+
+Banks:
+- asset: cash, tradable assets, interbank assets, reverse repos, external assets, other assets
+- liability: deposits, interbank liabilities, repos, other liabilities
+
+Hedge funds:
+- asset: cash, tradable assets, other assets
+- liability: repos
+
+Asset managers:
+- asset: cash, tradable assets, other assets
+- liability: other liabilities
+
+### 2. Contracts
+
+### 3. Constraints
+
+- Bank leverage constraint
+- LCR constraint
+- RWA constraint
+- Hedge fund leverage constraint
+
+### 4. Markets
+
+### 5. Behaviours
+
