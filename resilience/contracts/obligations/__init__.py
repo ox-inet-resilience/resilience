@@ -1,2 +1,2 @@
 from .PullFundingObgn import PullFundingObgn
-from .PullFundingObgn import PullFundingObgn
+from .RedeemSharesObgn import RedeemSharesObgn

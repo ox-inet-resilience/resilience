@@ -3,7 +3,7 @@ import logging
 from economicsl import Obligation
 
 
-class PullFundingObgn(Obligation):
+class RedeemSharesObgn(Obligation):
     __slots__ = ('shares', 'nSharesToRedeem')
 
     def __init__(self, shares, numberOfShares, timeToPay):

@@ -1,4 +1,4 @@
-from ..contracts.obligations import PullFundingObgn
+from ..contracts.obligations import RedeemSharesObgn
 
 from economicsl import Action
 
@@ -14,7 +14,7 @@ class RedeemShares(Action):
     def perform(self):
         super().perform()
         self.shares.add_shares_pending_to_redeem(self.get_amount())
-        obligation = PullFundingObgn(self.shares, self.get_amount(),
+        obligation = RedeemSharesObgn(self.shares, self.get_amount(),
                                      self.get_time() + self._ttrs)
         self.shares.get_asset_party().send_obligation(self.shares.get_liability_party(), obligation)
 
