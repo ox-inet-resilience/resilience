@@ -5,6 +5,9 @@
 Requires Python 3.
 Install the library by running on the root repository
 ```python
+# Run the `git checkout` step only if you want the version used in the paper
+# Otherwise, just use the latest version
+git checkout tags/v0.2
 python setup.py install
 ```
 
