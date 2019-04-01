@@ -168,10 +168,12 @@ class LeveragedInst(Institution):
             self.prepare_future_margin_call()
 
         # If CET1E becomes negative as a result of fulfiling obligation, do not do anything anymore
-        CET1E = self.get_CET1E()
-        if CET1E < 0:
-            print(self.get_name(), 'has negative CET1E')
-            return
+        # Bank-only
+        if hasattr(self, 'get_CET1E'):
+            CET1E = self.get_CET1E()
+            if CET1E < 0:
+                print(self.get_name(), 'has negative CET1E')
+                return
 
         # 2. Raise liquidity to meet less immediate matured requests
         for timeIndex in range(self.model.parameters.TIMESTEPS_TO_PAY, len(cashCommitments)):
