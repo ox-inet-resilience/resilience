@@ -174,6 +174,8 @@ class LeveragedInst(Institution):
             if CET1E < 0:
                 print(self.get_name(), 'has negative CET1E')
                 return
+        else:
+            CET1E = None
 
         # 2. Raise liquidity to meet less immediate matured requests
         for timeIndex in range(self.model.parameters.TIMESTEPS_TO_PAY, len(cashCommitments)):
