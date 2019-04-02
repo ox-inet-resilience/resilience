@@ -3,7 +3,7 @@
 # Usage
 
 Requires Python 3.
-Install the library by running on the root repository
+Install the library by running the following command(s) on the root repository
 ```python
 # Run the `git checkout` step only if you want the version used in the paper
 # Otherwise, just use the latest version
