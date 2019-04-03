@@ -2,14 +2,18 @@
 
 # Usage
 
-Requires Python 3.
-Install the library by running the following command(s) on the root repository
+Requires Python 3. It is recommended to run everything within a virtualenv.
+Install the library by running the following command
 ```python
-# Run the `git checkout` step only if you want the version used in the paper
-# Otherwise, just use the latest version
-git checkout tags/v0.2
-python setup.py install
+pip install git+https://github.com/ox-inet-resilience/resilience
 ```
+
+Or if you want to reproduce the paper's result, you have to install from `v0.2`
+```python
+pip install git+https://github.com/ox-inet-resilience/resilience@v0.2
+```
+
+Alternatively, you could `git clone` the repo and run `python setup.py install`.
 
 # Components
 
