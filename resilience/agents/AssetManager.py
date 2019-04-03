@@ -9,23 +9,29 @@ from .DefaultException import DefaultException
 
 
 class AssetManager(Institution):
-    def __init__(self, name, model):
+    def __init__(self, name: str, model):
         super().__init__(name, model)
         self.shares = []
         self.nShares = 0
         self.NAV_lr_previous = 0  # lr stands for loss relative
         self.nShares_extra_previous = 0
 
-    def update_value_of_all_shares(self):
+    def update_value_of_all_shares(self) -> None:
         for share in self.shares:
             share.update_value()
 
-    def issue_shares(self, owner, quantity):
+    def issue_shares(self, owner, quantity: int) -> Shares:
+        """
+        This method is used only at balance sheet initialisation step.
+        While the initialised quantity is an integer, it will soon change into
+        a float.
+        """
         self.nShares += quantity
         self.update_value_of_all_shares()
         return Shares(owner, self, quantity, self.get_net_asset_value())
 
-    def get_net_asset_value(self):
+    def get_net_asset_value(self) -> np.longdouble:
+        # This condition is added to avoid divide-by-zero
         if self.nShares > 0:
             return self.get_equity_value() / self.nShares
         return 0
@@ -36,10 +42,10 @@ class AssetManager(Institution):
     def step(self):
         super().step()
 
-    def get_equity_loss(self):
+    def get_equity_loss(self) -> np.longdouble:
         return 0.0
 
-    def pay_matured_cash_commitments_or_default(self):
+    def pay_matured_cash_commitments_or_default(self) -> None:
         maturedPullFunding = self.get_matured_obligations()
         if maturedPullFunding > 0:
             logging.debug("We have matured payment obligations for a total of %.2f" % maturedPullFunding)
@@ -49,12 +55,12 @@ class AssetManager(Institution):
                 logging.debug("A matured obligation was not fulfilled.\nDEFAULT DUE TO LACK OF LIQUIDITY")
                 raise DefaultException(self, DefaultException.TypeOfDefault.LIQUIDITY)
 
-    def trigger_default(self):
+    def trigger_default(self) -> None:
         super().trigger_default()
         # perform firesale assets
         self.sell_assets_proportionally()
 
-    def choose_actions(self):
+    def choose_actions(self) -> None:
         NAV = self.get_net_asset_value()
         logging.debug("\nMy NAV is %f" % NAV)
         if NAV < 0:
