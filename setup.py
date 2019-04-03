@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-dependency_links = ['git+https://github.com/ox-inet-resilience/py-distilledESL#egg=py-distilledESL']
+dependency_links = ['git+https://github.com/ox-inet-resilience/py-economicsl#egg=py-economicsl']
 
 setup(name='resilience',
       version='0.2',
