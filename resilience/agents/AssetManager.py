@@ -75,6 +75,9 @@ class AssetManager(Institution):
         if self.get_ue_cash() < _amount_to_redeem:
             raise DefaultException(self, DefaultException.TypeOfDefault.LIQUIDITY)
         share = self.shares[0]  # There is only 1 share object
+        # NOTE: share.redeem() is called directly here instead of using RedeemSharesOblgn.fulfil()
+        # because asset manager investor is currently None instead of an agent
+        # TODO ideally this should be within the obligation framework as well
         share.redeem(self.nShares_extra_previous, _amount_to_redeem)
         self.nShares -= self.nShares_extra_previous
         self.update_value_of_all_shares()
