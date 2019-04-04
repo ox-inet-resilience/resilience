@@ -334,7 +334,7 @@ class Bank(LeveragedInst):
 
     def get_leverage(self, cached_equity=None):
         """
-        Bank uses CET1E as its numerator instead of book equity,
+        Bank uses T1C (i.e. CET1E + AT1E) as its numerator instead of book equity,
         and leverage exposure instead of total asset
         """
         A = self.get_ledger().get_asset_value()
@@ -344,7 +344,7 @@ class Bank(LeveragedInst):
             CET1E = self.get_CET1E(A - L)
         else:
             CET1E = self.get_CET1E(cached_equity)
-        return CET1E / lev_exposure
+        return (CET1E + self.AT1E) / lev_exposure
 
     def get_leverage_distance(self):
         """
