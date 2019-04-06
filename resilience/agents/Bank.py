@@ -441,6 +441,8 @@ class Bank(LeveragedInst):
         # CET1E is returned here in order to cache its
         # computation
         CET1E = super().perform_liquidity_management()
+        if CET1E < 0:
+            return
 
         params = self.model.parameters
         use_RWA = params.BANK_RWA_ON
