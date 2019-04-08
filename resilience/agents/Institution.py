@@ -1,12 +1,13 @@
 import logging
 from collections import defaultdict
 
+import numpy as np  # for annotation purpose
+from economicsl import Agent
+
 from ..contracts import FailedMarginCallException
 from ..contracts import AssetCollateral, Deposit, Other, Repo
 from ..contracts.LongTermUnsecured import LongTermUnsecured
 from ..behaviours import sell_assets_proportionally
-
-from economicsl import Agent
 
 from ..parameters import eps
 from .DefaultException import DefaultException
@@ -27,7 +28,7 @@ class Institution(Agent):
         self.model = model
         self.params = model.parameters
 
-    def init(self, assets, liabilities):
+    def init(self, assets, liabilities) -> None:
         """ initiates the agent with a determined amount of:
 
             Assets:
@@ -47,7 +48,7 @@ class Institution(Agent):
         self.add_cash(cash)
 
         # Asset side
-        def _add_tradables(arr, template):
+        def _add_tradables(arr, template) -> None:
             if len(arr) > 0:
                 for i in range(len(arr)):
                     if arr[i] > 0:
@@ -67,7 +68,7 @@ class Institution(Agent):
         if (longTerm > 0):
             self.add(LongTermUnsecured(self, longTerm))
 
-    def pay_liability(self, amount, loan):
+    def pay_liability(self, amount, loan) -> None:
         """
         Pre-condition: we have enough liquidity!
 
@@ -81,13 +82,13 @@ class Institution(Agent):
         assert diff >= -2 * eps, diff
         self.get_ledger().pay_liability(amount, loan)
 
-    def update_asset_prices(self):
+    def update_asset_prices(self) -> None:
         for asset in self.get_ledger().get_all_assets():
             if asset.price_fell():
                 self.get_ledger().devalue_asset(asset, asset.valueLost())
                 asset.update_price()
 
-    def devalue_asset_collateral_of_type(self, assetType, priceLost):
+    def devalue_asset_collateral_of_type(self, assetType, priceLost) -> None:
         for asset in self.asset_collaterals[assetType]:
             self.get_ledger().devalue_asset(asset, asset.quantity * priceLost)
             # Update the price
@@ -109,7 +110,7 @@ class Institution(Agent):
 
         return eligibleActions
 
-    def get_equity_value(self):
+    def get_equity_value(self) -> np.longdouble:
         return self.get_ledger().get_equity_value() if self.is_alive() else self.equityAtDefault
 
     def get_tradable_of_type(self, atype):
@@ -125,12 +126,12 @@ class Institution(Agent):
             self.has_tradable_cache = True
         return self.tradables[atype]
 
-    def print_balance_sheet(self):
+    def print_balance_sheet(self) -> None:
         print("\nBalance Sheet of", self.get_name() + "\n**************************")
         self.get_ledger().print_balance_sheet(self)
         print("\nLeverage ratio: %.2f%%" % (100 * self.get_leverage()))
 
-    def fulfil_margin_calls_or_default(self):
+    def fulfil_margin_calls_or_default(self) -> None:
         try:
             repos = self.get_ledger().get_liabilities_of_type(Repo)
             for repo in repos:
@@ -139,7 +140,7 @@ class Institution(Agent):
             logging.debug("A margin call failed.")
             raise DefaultException(self, DefaultException.TypeOfDefault.FAILED_MARGIN_CALL)
 
-    def trigger_default(self):
+    def trigger_default(self) -> None:
         self.marked_as_default = False
 
     def encumber_cash(self, amount):
@@ -150,11 +151,11 @@ class Institution(Agent):
         self.encumberedCash += amount
         return amount
 
-    def unencumber_cash(self, amount):
+    def unencumber_cash(self, amount) -> None:
         assert (self.encumberedCash - amount) >= -eps
         self.encumberedCash -= amount
 
-    def receive_shock_to_asset(self, assetType, fractionLost):
+    def receive_shock_to_asset(self, assetType, fractionLost) -> None:
         assetsShocked = [asset for asset in
                          self.get_ledger().get_all_assets() if
                          hasattr(asset, 'get_asset_type') and
@@ -213,14 +214,14 @@ class Institution(Agent):
         initial_equity = self.get_ledger().get_initial_equity()
         return (self.get_equity_value() - initial_equity) / initial_equity
 
-    def set_initial_values(self):
+    def set_initial_values(self) -> None:
         self.get_ledger().set_initial_values()
 
     # methods after this line is merged from Behaviour class
     def choose_actions(self):
         pass
 
-    def act(self):
+    def act(self) -> None:
         if not self.is_alive():
             logging.debug(f"{self.get_name()} cannot act. I'm crucified, dead and buried, and have descended into hell.")
             return
