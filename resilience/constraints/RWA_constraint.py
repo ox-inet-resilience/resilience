@@ -11,9 +11,9 @@ class RWA_Constraint(object):
         self.ASSETTYPE = me.model.parameters.AssetType
 
     def get_RWCR_min(self) -> np.longdouble:
-        if hasattr(self.me, 'RWCR_min'):
-            return self.me.RWCR_min
-        return self.me.model.parameters.RWA_RATIO_MIN
+        if hasattr(self.me, 'RWCR_FLTF'):
+            return self.me.RWCR_FLTF
+        return self.me.model.parameters.RWCR_FLTF
 
     def is_insolvent(self, cached_equity=None) -> bool:
         rwa_ratio = self.get_RWA_ratio(cached_equity)

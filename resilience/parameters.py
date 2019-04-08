@@ -100,7 +100,7 @@ class Parameters:
     BANK_LEVERAGE_BUFFER = 0.05
     BANK_LEVERAGE_EXCESS_TARGET = 0.01
     BANK_LEVERAGE_TARGET = BANK_LEVERAGE_BUFFER + BANK_LEVERAGE_EXCESS_TARGET
-    RWA_RATIO_MIN = 0.045  # TODO which data source and whether this is bank-only
+    RWCR_FLTF = 0.045  # TODO which data source and whether this is bank-only
 
     # CACHING
     DONOT_CACHE_NETWORK = False
