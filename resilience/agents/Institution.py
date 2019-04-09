@@ -28,6 +28,13 @@ class Institution(Agent):
         self.model = model
         self.params = model.parameters
 
+    def _add_tradables(self, arr, template) -> None:
+        if len(arr) > 0:
+            for i in range(len(arr)):
+                if arr[i] > 0:
+                    self.add(AssetCollateral(self, getattr(self.params.AssetType, template % (i + 1)),
+                                             self.model.assetMarket, arr[i]))
+
     def init(self, assets, liabilities) -> None:
         """ initiates the agent with a determined amount of:
 
@@ -48,16 +55,10 @@ class Institution(Agent):
         self.add_cash(cash)
 
         # Asset side
-        def _add_tradables(arr, template) -> None:
-            if len(arr) > 0:
-                for i in range(len(arr)):
-                    if arr[i] > 0:
-                        self.add(AssetCollateral(self, getattr(self.params.AssetType, template % (i + 1)),
-                                                 self.model.assetMarket, arr[i]))
-        _add_tradables(equities, 'EQUITIES%d')
-        _add_tradables(corp_bonds, 'CORPORATE_BONDS%d')
-        _add_tradables(gov_bonds, 'GOV_BONDS%d')
-        _add_tradables(other_tradable, 'OTHERTRADABLE%d')
+        self._add_tradables(equities, 'EQUITIES%d')
+        self._add_tradables(corp_bonds, 'CORPORATE_BONDS%d')
+        self._add_tradables(gov_bonds, 'GOV_BONDS%d')
+        self._add_tradables(other_tradable, 'OTHERTRADABLE%d')
 
         if (otherAsset > 0):
             self.add(Other(self, None, otherAsset))
