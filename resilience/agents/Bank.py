@@ -172,7 +172,6 @@ class LeveragedInst(Institution):
         if hasattr(self, 'get_CET1E'):
             CET1E = self.get_CET1E()
             if CET1E < 0:
-                print(self.get_name(), 'has negative CET1E')
                 return CET1E
         else:
             CET1E = None
