@@ -4,7 +4,7 @@ from economicsl import Contract
 
 
 class Revaluation(Contract):
-    __slots__ = 'me', 'revaluation', 'payoffs', 'revaluation_initial'
+    __slots__ = 'me', 'revaluation', 'payoffs', 'revaluation_initial', 'notionals_initial'
     ctype = 'Revaluation'
 
     def __init__(self, me):
@@ -12,6 +12,7 @@ class Revaluation(Contract):
         self.me = me
         self.reset_values()
         self.revaluation_initial = None  # to be used only in a version of bail-in run
+        self.notionals_initial = None  # to be used only in a version of bail-in run
 
     def get_name(self, me):
         return "Interbank revaluation of " + me.get_name()
@@ -26,8 +27,9 @@ class Revaluation(Contract):
         self.revaluation = 0
         self.payoffs = np.array([0., 0., 0., 0.])  # k4l2, k4l3, k5l2, k5l3
 
-    def set_revaluation_initial(self):
+    def set_revaluation_initial(self, notionals_initial):
         self.revaluation_initial = sum(self.payoffs)
+        self.notionals_initial = sum(notionals_initial)
 
     def add_payoff(self, x):
         self.payoffs += x
