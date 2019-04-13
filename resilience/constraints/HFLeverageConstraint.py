@@ -31,7 +31,9 @@ class HFLeverageConstraint(object):
         w_cash = cash / collateral
         _tradable = ldg.get_assets_of_type(AssetCollateral)
         repo = ldg.get_liability_value_of(Repo)
-        elligible_asset_minimum = repo / (w_cash + sum((1 - t.get_haircut()) * t.get_value() for t in _tradable) / collateral)
+        # Sometimes _denominator is 0
+        _denominator = w_cash + sum((1 - t.get_haircut()) * t.get_value() for t in _tradable) / collateral
+        elligible_asset_minimum = repo / _denominator if _denominator > 0 else 0
 
         other = ldg.get_asset_value_of(Other)
         external = ldg.get_asset_value_of(TradableAsset, self.ASSETTYPE.EXTERNAL1)
