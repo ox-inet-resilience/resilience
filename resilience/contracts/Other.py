@@ -47,3 +47,7 @@ class Other(Contract):
         self.liabilityParty.pay_liability(amount, self)
         self.liabilityParty.get_ledger().subtract_cash(amount)
         self.reduce_principal(amount)
+
+    def liquidate(self):
+        self.fundingAlreadyPulled = 0
+        self.principal = 0.0

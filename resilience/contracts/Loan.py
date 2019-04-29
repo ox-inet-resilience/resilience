@@ -83,12 +83,10 @@ class Loan(Contract):
         if self.parameters.ENDOGENOUS_LGD_ON:
             LGD = self.liabilityParty.endogenous_LGD
         else:
-            if hasattr(self.liabilityParty, 'exogenous_LGD'):
-                LGD = self.liabilityParty.exogenous_LGD
-            else:
-                LGD = self.parameters.INTERBANK_LOSS_GIVEN_DEFAULT
+            LGD = self.parameters.INTERBANK_LOSS_GIVEN_DEFAULT
         value = self.get_value()
-        self.assetParty.get_ledger().devalue_asset(self, value)
+        # TODO uncomment this for correct accounting
+        # self.assetParty.get_ledger().devalue_asset(self, value)
         self.assetParty.add_cash(value * (1.0 - LGD))
         # TODO uncomment this for correct accounting
         # self.liabilityParty.get_ledger().devalue_liability(self, value)

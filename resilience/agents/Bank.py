@@ -2,7 +2,7 @@ import logging
 
 from ..constraints import BankLeverageConstraint, LCR_Constraint, RWA_Constraint
 from ..actions import PullFunding, SellAsset
-from ..contracts import Loan, Repo
+from ..contracts import Loan, Repo, Other
 
 from ..behaviours import perform_proportionally, pay_off_liabilities
 
@@ -412,8 +412,9 @@ class Bank(LeveragedInst):
         logging.debug("Liquidate all loans (in the liability side).")
         loans = self.get_ledger().get_liabilities_of_type(Loan)
         repos = self.get_ledger().get_liabilities_of_type(Repo)
-        for loan in (loans + repos):
-            loan.liquidate()
+        others = self.get_ledger().get_liabilities_of_type(Other)
+        for c in (loans + repos + others):
+            c.liquidate()
 
     def is_insolvent(self):
         params = self.model.parameters
