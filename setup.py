@@ -1,6 +1,9 @@
 from setuptools import setup, find_packages
 
-install_requires = ['py-economicsl@git+https://github.com/ox-inet-resilience/py-economicsl@master']
+install_requires = [
+    'py-economicsl@git+https://github.com/ox-inet-resilience/py-economicsl@master',
+    'numpy'
+]
 
 setup(name='resilience',
       version='0.2',
