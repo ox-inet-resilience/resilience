@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-dependency_links = ['git+https://github.com/ox-inet-resilience/py-economicsl#egg=py-economicsl']
+install_requires = ['py-economicsl@git+https://github.com/ox-inet-resilience/py-economicsl@master']
 
 setup(name='resilience',
       version='0.2',
@@ -11,5 +11,5 @@ setup(name='resilience',
       author_email='rhtbot@protonmail.com',
       license='Apache',
       packages=find_packages(),
-      dependency_links=dependency_links,
+      install_requires=install_requires,
       zip_safe=False)
