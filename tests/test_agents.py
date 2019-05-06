@@ -91,7 +91,6 @@ class TestBank:
     def test_act_rwa_only(self, bank):
         set_constraints(1, 0, 0)
 
-        # TODO remove RWA_RATIO_BUFFER
         bank.RWCR_buffer = 0.1
         bank.RWCR_target = 0.145
 

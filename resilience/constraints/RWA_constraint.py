@@ -21,9 +21,7 @@ class RWA_Constraint(object):
 
     def is_below_buffer(self, cached_equity=None) -> bool:
         rwa_ratio = self.get_RWA_ratio(cached_equity)
-        if hasattr(self.me, 'RWCR_buffer'):
-            return rwa_ratio < self.me.RWCR_buffer
-        return rwa_ratio < (self.me.model.parameters.RWA_RATIO_BUFFER - eps)
+        return rwa_ratio < self.me.RWCR_buffer
 
     def get_RWA_ratio(self, cached_equity=None) -> np.longdouble:
         CET1E = self.me.get_CET1E(cached_equity)
