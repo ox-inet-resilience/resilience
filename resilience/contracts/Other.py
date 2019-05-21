@@ -3,7 +3,7 @@ from ..actions import PayLoan
 
 
 class Other(Contract):
-    __slots__ = 'parameters', 'principal', '_payloan'
+    __slots__ = 'parameters', 'principal', '_payloan', 'fundingAlreadyPulled'
     ctype = 'Other'
 
     # TODO: See the TODO in the definition of Deposit
@@ -13,6 +13,7 @@ class Other(Contract):
         self.parameters = _model.parameters
         self.principal = amount
         self._payloan = PayLoan(liabilityParty, self)
+        self.fundingAlreadyPulled = 0
 
     def get_LCR_weight(self):
         return self.parameters.OTHER_LCR
