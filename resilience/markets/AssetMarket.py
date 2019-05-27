@@ -33,10 +33,10 @@ class Order(object):
 
     def settle(self):
         # clear sale
-        # We had an amount Q of asset valued at price P. The we sold a quantity q that made the price fall to p. The
+        # We had an quantity Q of asset valued at price P. The we sold a quantity q that made the price fall to p. The
         # sale happened at the mid-point price (P+p)/2.
         #
-        # 1) We gain an amount pq of cash.
+        # 1) We gain a 'pq' of cash.
         # 2) We make a loss q(P-p)/2 from the sale, and a loss (Q-q)*(P-p) due to the devaluation.
         # @param quantity_sold the quantity of asset sold, in units
         quantity_sold = min(self.asset.quantity, self.quantity)
@@ -50,18 +50,18 @@ class Order(object):
             self.asset.assetParty.add_cash(value_sold)
 
 class AssetMarket(Market):
-    __slots__ = 'prices', 'priceImpacts', 'amountsSold', 'haircuts', 'totalAmountsSold', 'orderbook', 'oldPrices', 'total_quantities'
+    __slots__ = 'prices', 'priceImpacts', 'quantities_sold', 'haircuts', 'cumulative_quantities_sold', 'orderbook', 'oldPrices', 'total_quantities'
 
     def __init__(self, model):
         super().__init__(model)
         self.prices = defaultdict(lambda: 1.0)
         self.priceImpacts = {}
-        # The total amount sold during a market clearing
-        self.amountsSold = defaultdict(np.longdouble)
+        # The total quantities sold during the most recent market clearing
+        self.quantities_sold = defaultdict(np.longdouble)
         self.haircuts = {}
-        # The cumulative total amount sold from the earliest market clearing to
+        # The cumulative total quantities sold from the earliest market clearing to
         # the most recent one
-        self.totalAmountsSold = defaultdict(np.longdouble)
+        self.cumulative_quantities_sold = defaultdict(np.longdouble)
         self.orderbook = []
         self.oldPrices = {}
         self.total_quantities = defaultdict(np.longdouble)
@@ -70,20 +70,20 @@ class AssetMarket(Market):
         # copy the value instead of accessing it directly
         self.haircuts = dict(self.model.parameters.INITIAL_HAIRCUTS)
 
-    def put_for_sale(self, asset, amount):
-        assert amount > 0, amount
-        self.orderbook.append(Order(asset, amount))
+    def put_for_sale(self, asset, quantity):
+        assert quantity > 0, quantity
+        self.orderbook.append(Order(asset, quantity))
         atype = asset.get_asset_type()
 
-        logging.debug(f"Putting for sale: {atype}, an amount {amount}")
+        logging.debug(f"Putting for sale: {atype} at quantity {quantity}")
 
-        self.amountsSold[atype] += amount
+        self.quantities_sold[atype] += quantity
 
     def clear_the_market(self):
         logging.debug("\nMARKET CLEARING\n")
         self.oldPrices = dict(self.prices)
         # 1. Update price based on price impact
-        for atype, v in self.amountsSold.items():
+        for atype, v in self.quantities_sold.items():
             if self.model.parameters.PREDEFAULT_FIRESALE_CONTAGION or self.model.parameters.POSTDEFAULT_FIRESALE_CONTAGION:
                 self.compute_price_impact(atype, v)
 
@@ -95,30 +95,30 @@ class AssetMarket(Market):
             if self.model.parameters.HAIRCUT_CONTAGION:
                 self.compute_haircut(atype, v)
 
-            self.totalAmountsSold[atype] += v
+            self.cumulative_quantities_sold[atype] += v
 
-        self.amountsSold = defaultdict(np.longdouble)
+        self.quantities_sold = defaultdict(np.longdouble)
 
         # 2. Perform the sale
         for order in self.orderbook:
             order.settle()
         self.orderbook = []
 
-    def compute_price_impact(self, assetType, amountSold):
+    def compute_price_impact(self, assetType, qty_sold):
         current_price = self.prices[assetType]
         price_impact = self.priceImpacts[assetType]
         total = self.total_quantities[assetType]
         if total <= 0:
             return
 
-        fraction_sold = amountSold / total
+        fraction_sold = qty_sold / total
 
         # new_price = current_price * exponential_price_impact(fraction_sold, price_impact)
         new_price = max(0, current_price + linear_price_impact(fraction_sold, price_impact))
 
         self.set_price(assetType, new_price)
 
-    def compute_haircut(self, assetType, amountSold):
+    def compute_haircut(self, assetType, qty_sold):
         """
         We took a departure from Bookstaber 2014
         """
@@ -150,8 +150,8 @@ class AssetMarket(Market):
         """
         return self.prices.keys()
 
-    def get_total_amount_sold(self, assetType):
+    def get_cumulative_quantities_sold(self, assetType):
         """
-        Returns the cummulative total amount sold during the market clearing
+        Returns the cummulative total quantities sold of all the market clearings
         """
-        return self.totalAmountsSold[assetType]
+        return self.cumulative_quantities_sold[assetType]
