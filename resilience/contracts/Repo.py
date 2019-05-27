@@ -55,10 +55,10 @@ class Repo(Loan):
         self.collateral[asset] -= _amount
 
     def get_max_ue_haircutted_collateral(self):
-        return sum(c.get_haircutted_ue_valuation() for c in self.collateral.keys())
+        return sum(c.get_haircutted_ue_notional() for c in self.collateral.keys())
 
     def get_mc_size(self):
-        current_haircutted_collateral = self.get_haircutted_collateral_valuation()
+        current_haircutted_collateral = self.get_haircutted_collateral_notional()
         return self.principal - current_haircutted_collateral
 
     def fulfil_margin_call(self):
@@ -109,7 +109,7 @@ class Repo(Loan):
             amount2firesell = self.future_margin_call - self.future_max_collateral
             self.liabilityParty.sell_assets_proportionally(amount2firesell)
 
-    def get_haircutted_collateral_valuation(self):
+    def get_haircutted_collateral_notional(self):
         return sum(a.get_price() * quantity * (1.0 - a.get_haircut())
                    for (a, quantity) in self.collateral.items()) + self.cash_collateral
 
@@ -139,7 +139,7 @@ class Repo(Loan):
         if remainder <= eps:
             return
 
-        initial_collateral = self.get_haircutted_collateral_valuation()
+        initial_collateral = self.get_haircutted_collateral_notional()
         if initial_collateral > 0:
             _factor = remainder / initial_collateral
 
@@ -161,10 +161,13 @@ class Repo(Loan):
             if self.parameters.POSTDEFAULT_FIRESALE_CONTAGION:
                 newAsset.put_for_sale(newAsset.quantity)
 
-        # 3. Reduce the value of this repo to zero.
-        if self.assetParty is not None:
-            self.assetParty.get_ledger().devalue_asset(self, self.principal)
-        self.liabilityParty.get_ledger().devalue_liability(self, self.principal)
+        # 3. Reduce the notional of this repo to zero.
+        # TODO uncomment this for correct accounting
+        # NOTE: the ledger keeps track of valuation, not
+        # notional!
+        #if self.assetParty is not None:
+        #    self.assetParty.get_ledger().devalue_asset(self, self.principal)
+        #self.liabilityParty.get_ledger().devalue_liability(self, self.principal)
         self.principal = 0
 
     def printCollateral(self):
@@ -179,4 +182,4 @@ class Repo(Loan):
         print("Principal of the Repo is ", self.principal)
         print("Amount already pulled is ", self.get_funding_already_pulled())
         print("Amount of collateral needed is ", (self.principal - self.get_funding_already_pulled()))
-        print("Current value of collateral is ", self.get_haircutted_collateral_valuation())
+        print("Current notional of collateral is ", self.get_haircutted_collateral_notional())

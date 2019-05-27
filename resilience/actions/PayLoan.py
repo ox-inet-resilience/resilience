@@ -25,7 +25,7 @@ class PayLoan(Action):
         self.loan.pay_loan(self.get_amount())
 
     def get_max(self):
-        return self.loan.get_valuation() - self.loan.get_funding_already_pulled()
+        return self.loan.get_notional() - self.loan.get_funding_already_pulled()
 
     def print(self):
         print(f"Pay Loan action by {self.loan.get_liability_party().get_name()} -> amount: {self.get_amount()}")

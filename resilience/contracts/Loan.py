@@ -34,7 +34,7 @@ class Loan(Contract):
 
     def pay_loan(self, amount):
         # update the amount required to be paid because it could have decreased due to bail-in
-        amount = min(amount, self.get_valuation())
+        amount = min(amount, self.get_notional())
 
         if self.liabilityParty is not None:
             self.liabilityParty.pay_liability(amount, self)
@@ -51,8 +51,8 @@ class Loan(Contract):
         self.reduce_principal(amount)
 
     def reduce_principal(self, amount):
-        value = self.get_valuation()
-        assert (value - amount) >= -eps, (value, amount)
+        notional = self.get_notional()
+        assert (notional - amount) >= -eps, (notional, amount)
         self.principal -= amount
         self.principal = abs(self.principal)  # round off floating error
 
@@ -70,12 +70,18 @@ class Loan(Contract):
             return self._payloan
 
     def is_eligible(self, me):
-        value = self.get_valuation()
-        return (value > 0) and (value > self.get_funding_already_pulled())
+        notional = self.get_notional()
+        return (notional > 0) and (notional > self.get_funding_already_pulled())
         # TODO: include assetParty.is_alive() and liabilityParty.isAlive()
 
-    def get_valuation(self):
+    def get_notional(self):
         return self.principal
+
+    def get_valuation(self):
+        # In general, the valuation of a contract may differ from its
+        # notional depending on whether it is computed from the asset side or
+        # liability side
+        return self.get_notional()
 
     def liquidate(self):
         if self.assetParty is None:
@@ -84,12 +90,16 @@ class Loan(Contract):
             LGD = self.liabilityParty.endogenous_LGD
         else:
             LGD = self.parameters.INTERBANK_LOSS_GIVEN_DEFAULT
-        value = self.get_valuation()
+        notional = self.get_notional()
         # TODO uncomment this for correct accounting
-        # self.assetParty.get_ledger().devalue_asset(self, value)
-        self.assetParty.add_cash(value * (1.0 - LGD))
+        # NOTE: the ledger keeps track of valuation, not
+        # notional!
+        # self.assetParty.get_ledger().devalue_asset(self, notional)
+        self.assetParty.add_cash(notional * (1.0 - LGD))
         # TODO uncomment this for correct accounting
-        # self.liabilityParty.get_ledger().devalue_liability(self, value)
+        # NOTE: the ledger keeps track of valuation, not
+        # notional!
+        # self.liabilityParty.get_ledger().devalue_liability(self, notional)
         self.fundingAlreadyPulled = 0
         self.principal = 0.0
 
