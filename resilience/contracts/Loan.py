@@ -34,7 +34,7 @@ class Loan(Contract):
 
     def pay_loan(self, amount):
         # update the amount required to be paid because it could have decreased due to bail-in
-        amount = min(amount, self.get_value())
+        amount = min(amount, self.get_valuation())
 
         if self.liabilityParty is not None:
             self.liabilityParty.pay_liability(amount, self)
@@ -51,7 +51,7 @@ class Loan(Contract):
         self.reduce_principal(amount)
 
     def reduce_principal(self, amount):
-        value = self.get_value()
+        value = self.get_valuation()
         assert (value - amount) >= -eps, (value, amount)
         self.principal -= amount
         self.principal = abs(self.principal)  # round off floating error
@@ -70,11 +70,11 @@ class Loan(Contract):
             return self._payloan
 
     def is_eligible(self, me):
-        value = self.get_value()
+        value = self.get_valuation()
         return (value > 0) and (value > self.get_funding_already_pulled())
         # TODO: include assetParty.is_alive() and liabilityParty.isAlive()
 
-    def get_value(self):
+    def get_valuation(self):
         return self.principal
 
     def liquidate(self):
@@ -84,7 +84,7 @@ class Loan(Contract):
             LGD = self.liabilityParty.endogenous_LGD
         else:
             LGD = self.parameters.INTERBANK_LOSS_GIVEN_DEFAULT
-        value = self.get_value()
+        value = self.get_valuation()
         # TODO uncomment this for correct accounting
         # self.assetParty.get_ledger().devalue_asset(self, value)
         self.assetParty.add_cash(value * (1.0 - LGD))

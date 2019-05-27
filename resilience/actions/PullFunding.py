@@ -41,7 +41,7 @@ class PullFunding(Action):
     def get_max(self):
         # Truncate max to be always positive
         # Sometimes it is a negative infinitesimal number
-        return max(0, self.loan.get_value() - self.loan.get_funding_already_pulled())
+        return max(0, self.loan.get_valuation() - self.loan.get_funding_already_pulled())
 
     def print(self):
         logging.debug(f"Pull Funding action by {self.loan.get_asset_party().get_name()}"

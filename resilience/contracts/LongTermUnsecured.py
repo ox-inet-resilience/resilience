@@ -16,5 +16,5 @@ class LongTermUnsecured(Contract):
     def get_name(self, me):
         return "Long term unsecured liabilities"
 
-    def get_value(self):
+    def get_valuation(self):
         return self.amount

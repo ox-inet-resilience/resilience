@@ -12,7 +12,7 @@ class DefaultException(Exception):
         # PERF these measures are commented out to speed up the simulation
         # since they are not used at all
         # TODO maybe remove these lines
-        # self.equityAtDefault = me.get_equity_value()
+        # self.equityAtDefault = me.get_equity_valuation()
         # if hasattr(me, 'isaBank') and me.isaBank:
         #     self.lcrAtDefault = me.get_LCR()
 

@@ -23,7 +23,7 @@ class SellAsset(Action):
             self.asset.put_for_sale(quantityToSell)
 
     def get_max(self):
-        return self.asset.get_unencumbered_value() - self.asset.putForSale_ * self.asset.price
+        return self.asset.get_unencumbered_valuation() - self.asset.putForSale_ * self.asset.price
 
     def print(self):
         print(f"Sell Asset action by {self.asset.get_asset_party().getName()}"

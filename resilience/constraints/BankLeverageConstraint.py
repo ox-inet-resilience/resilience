@@ -49,5 +49,5 @@ class BankLeverageConstraint(object):
         DeltaA is calibrated from data.
         """
         if cached_asset is None:
-            return self.me.get_ledger().get_asset_value() - self.me.DeltaA
+            return self.me.get_ledger().get_asset_valuation() - self.me.DeltaA
         return cached_asset - self.me.DeltaA

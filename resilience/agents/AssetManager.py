@@ -16,9 +16,9 @@ class AssetManager(Institution):
         self.NAV_lr_previous = 0  # lr stands for loss relative
         self.nShares_extra_previous = 0
 
-    def update_value_of_all_shares(self) -> None:
+    def update_valuation_of_all_shares(self) -> None:
         for share in self.shares:
-            share.update_value()
+            share.update_valuation()
 
     def issue_shares(self, owner, quantity: int) -> Shares:
         """
@@ -27,13 +27,13 @@ class AssetManager(Institution):
         a float.
         """
         self.nShares += quantity
-        self.update_value_of_all_shares()
-        return Shares(owner, self, quantity, self.get_net_asset_value())
+        self.update_valuation_of_all_shares()
+        return Shares(owner, self, quantity, self.get_net_asset_valuation())
 
-    def get_net_asset_value(self) -> np.longdouble:
+    def get_net_asset_valuation(self) -> np.longdouble:
         # This condition is added to avoid divide-by-zero
         if self.nShares > 0:
-            return self.get_equity_value() / self.nShares
+            return self.get_equity_valuation() / self.nShares
         return 0
 
     def get_nShares(self):
@@ -61,7 +61,7 @@ class AssetManager(Institution):
         self.sell_assets_proportionally()
 
     def choose_actions(self) -> None:
-        NAV = self.get_net_asset_value()
+        NAV = self.get_net_asset_valuation()
         logging.debug("\nMy NAV is %f" % NAV)
         if NAV < 0:
             # Equity is negative, probably due to price fell
@@ -80,7 +80,7 @@ class AssetManager(Institution):
         # TODO ideally this should be within the obligation framework as well
         share.redeem(self.nShares_extra_previous, _amount_to_redeem)
         self.nShares -= self.nShares_extra_previous
-        self.update_value_of_all_shares()
+        self.update_valuation_of_all_shares()
 
         # 2) Firesell to meet current NAV loss
         assert NAV <= self.NAV_previous + eps, (NAV, self.NAV_previous)
@@ -105,7 +105,7 @@ class AssetManager(Institution):
         self.NAV_previous = NAV
 
         # 3) Firesell extra assets to get enough cash if it is too low
-        _A = self.get_ledger().get_asset_value()
+        _A = self.get_ledger().get_asset_valuation()
         _C = self.get_cash_()
         if _C / _A < 0.9 * self.cash_fraction_initial:
             self.sell_assets_proportionally(_A * self.cash_fraction_initial - _C)

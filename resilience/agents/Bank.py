@@ -22,8 +22,8 @@ class LeveragedInst(Institution):
         (Book Leverage Ratio) = (current Equity) / (current Asset)
         In `Bank`, this method will be overriden
         """
-        A = self.get_ledger().get_asset_value()
-        L = self.get_ledger().get_liability_value()
+        A = self.get_ledger().get_asset_valuation()
+        L = self.get_ledger().get_liability_valuation()
         if A == 0:  # prevents divide by 0
             return 0
         return (A - L) / A
@@ -336,10 +336,10 @@ class Bank(LeveragedInst):
         Bank uses T1C (i.e. CET1E + AT1E) as its numerator instead of book equity,
         and leverage exposure instead of total asset
         """
-        A = self.get_ledger().get_asset_value()
+        A = self.get_ledger().get_asset_valuation()
         lev_exposure = self.leverage_constraint.get_leverage_denominator(A)
         if cached_equity is None:
-            L = self.get_ledger().get_liability_value()
+            L = self.get_ledger().get_liability_valuation()
             CET1E = self.get_CET1E(A - L)
         else:
             CET1E = self.get_CET1E(cached_equity)
@@ -362,7 +362,7 @@ class Bank(LeveragedInst):
 
     def get_CET1E(self, cached_equity=None):
         if cached_equity is None:
-            E = self.get_equity_value()
+            E = self.get_equity_valuation()
         else:
             E = cached_equity
         return E - (self.AT1E + self.T2C) - self.DeltaE
@@ -406,7 +406,7 @@ class Bank(LeveragedInst):
         if self.model.parameters.ENDOGENOUS_LGD_ON:
             # calculating endogenous LGD
             print("Note: make sure N is sufficiently large (previous run requires it to be at least 100)")
-            L = self.get_ledger().get_liability_value()
+            L = self.get_ledger().get_liability_valuation()
             self.endogenous_LGD = max(0, 1 - (cash_raised / L))
 
         logging.debug("Liquidate all loans (in the liability side).")
@@ -418,7 +418,7 @@ class Bank(LeveragedInst):
 
     def is_insolvent(self):
         params = self.model.parameters
-        E = self.get_equity_value()
+        E = self.get_equity_valuation()
         is_rwa_insolvent = params.BANK_RWA_ON and self.rwa_constraint.is_insolvent(E)
         is_lev_insolvent = params.BANK_LEVERAGE_ON and self.leverage_constraint.is_insolvent(E)
         return is_rwa_insolvent or is_lev_insolvent

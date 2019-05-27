@@ -30,13 +30,13 @@ class AssetCollateral(TradableAsset):
         # PERF optimized
         return self.quantity - self.encumberedQuantity
 
-    def get_unencumbered_value(self):
+    def get_unencumbered_valuation(self):
         return (self.quantity - self.encumberedQuantity) * self.price
 
-    def get_haircutted_ue_value(self):
-        return self.get_unencumbered_value() * (1 - self.get_haircut())
+    def get_haircutted_ue_valuation(self):
+        return self.get_unencumbered_valuation() * (1 - self.get_haircut())
 
-    def get_value(self):
+    def get_valuation(self):
         return self.quantity * self.price
 
     def change_ownership(self, newOwner, quantity):

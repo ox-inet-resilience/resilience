@@ -21,7 +21,7 @@ class Other(Contract):
     def get_name(self, me):
         return "Other"
 
-    def get_value(self):
+    def get_valuation(self):
         return self.principal
 
     def set_amount(self, amount):
@@ -29,7 +29,7 @@ class Other(Contract):
 
     def is_eligible(self, me):
         # Only Other Liability has action
-        return (self.assetParty is None) and self.get_value() > 0
+        return (self.assetParty is None) and self.get_valuation() > 0
 
     def get_action(self, me):
         return self._payloan
@@ -38,12 +38,12 @@ class Other(Contract):
         return 0.0
 
     def reduce_principal(self, amount):
-        value = self.get_value()
+        value = self.get_valuation()
         self.set_amount(value - amount)
 
     def pay_loan(self, amount):
         # update the amount required to be paid because it could have decreased due to bail-in
-        value = self.get_value()
+        value = self.get_valuation()
         amount = min(amount, value)
         self.liabilityParty.pay_liability(amount, self)
         self.liabilityParty.get_ledger().subtract_cash(amount)

@@ -5,29 +5,29 @@ TODO: sphinx this
 
 ## Balance sheet access of all institutions
 
-- A: inst.get_ledger().get_asset_value()
-- L: inst.get_ledger().get_liability_value()
-- E: inst.get_equity_value()
+- A: inst.get_ledger().get_asset_valuation()
+- L: inst.get_ledger().get_liability_valuation()
+- E: inst.get_equity_valuation()
 - C: inst.get_cash_()
-- T: inst.get_asset_value_of(AssetCollateral)
-  encumbered value: sum(a.get_encumbered_value() for a in inst.get_ledger().get_assets_of_type(AssetCollateral))
+- T: inst.get_asset_valuation_of(AssetCollateral)
+  encumbered value: sum(a.get_encumbered_valuation() for a in inst.get_ledger().get_assets_of_type(AssetCollateral))
 - T_{ia}: AssetCollateral (with AssetType MBS, EQUITIES, CORPORATE_BONDS, GOV_BONDS)
 
-- R: inst.get_asset_value_of(Repo)
-- R_{ij}: [r.get_value() for r in inst.get_ledger().get_assets_of_type(Repo) if r.get_liability_party() == fi_j]
-- \\bar{R}: inst.get_liability_value_of(Repo)
-- O: inst.get_asset_value_of(Other)
-- \\bar{O}: inst.get_liability_value_of(Other)
-- Y: inst.get_asset_value_of(Asset, AssetType.EXTERNAL1)
+- R: inst.get_asset_valuation_of(Repo)
+- R_{ij}: [r.get_valuation() for r in inst.get_ledger().get_assets_of_type(Repo) if r.get_liability_party() == fi_j]
+- \\bar{R}: inst.get_liability_valuation_of(Repo)
+- O: inst.get_asset_valuation_of(Other)
+- \\bar{O}: inst.get_liability_valuation_of(Other)
+- Y: inst.get_asset_valuation_of(Asset, AssetType.EXTERNAL1)
 
 ## 4.1.1 Bank only contracts
-- I_i: inst.get_asset_value_of(Loan)
-- I_{ij}: [l.get_value() for l in inst.get_ledger().get_assets_of_type(Loan) if l.get_liability_party() == bank_j]
-- \\bar{I}_i: inst.get_liability_value_of(Loan)
-- D_i: inst.get_asset_value_of(Deposit)
+- I_i: inst.get_asset_valuation_of(Loan)
+- I_{ij}: [l.get_valuation() for l in inst.get_ledger().get_assets_of_type(Loan) if l.get_liability_party() == bank_j]
+- \\bar{I}_i: inst.get_liability_valuation_of(Loan)
+- D_i: inst.get_asset_valuation_of(Deposit)
 
 ## 4.1.2 AM only
-- \\eta: inst.get_net_asset_value()  # this is defined as A/N instead of (A-L)/N
+- \\eta: inst.get_net_asset_valuation()  # this is defined as A/N instead of (A-L)/N
 - N: inst.getnShares()
 - \\sigma_{ij}: [s.getnShares() for s in inst.get_ledger().get_assets_of_type(Shares) if s.get_liability_party() == AM_i]
 - \\tilde{S_i}: \\eta * sum(\\sigma_{ij})

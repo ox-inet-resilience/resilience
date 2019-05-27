@@ -40,11 +40,11 @@ class RWA_Constraint(object):
             rw += weights[tradable_type] * sum((a.quantity - a.putForSale_) * a.price for a in self.me.get_tradable_of_type(tradable_type))
 
         # other assets
-        rw += weights['other'] * ldg.get_asset_value_of(Other)
+        rw += weights['other'] * ldg.get_asset_valuation_of(Other)
         # external assets
-        rw += weights['external'] * ldg.get_asset_value_of(TradableAsset, self.ASSETTYPE.EXTERNAL1)
+        rw += weights['external'] * ldg.get_asset_valuation_of(TradableAsset, self.ASSETTYPE.EXTERNAL1)
         # loan
-        rw += weights['loan'] * sum((l.get_value() - l.get_funding_already_pulled()) for l in ldg.get_assets_of_type(Loan))
+        rw += weights['loan'] * sum((l.get_valuation() - l.get_funding_already_pulled()) for l in ldg.get_assets_of_type(Loan))
         # repo
-        rw += weights['repo'] * sum((l.get_value() - l.get_funding_already_pulled()) for l in ldg.get_assets_of_type(Repo))
+        rw += weights['repo'] * sum((l.get_valuation() - l.get_funding_already_pulled()) for l in ldg.get_assets_of_type(Repo))
         return rw

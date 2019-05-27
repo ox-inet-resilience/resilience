@@ -55,10 +55,10 @@ class Repo(Loan):
         self.collateral[asset] -= _amount
 
     def get_max_ue_haircutted_collateral(self):
-        return sum(c.get_haircutted_ue_value() for c in self.collateral.keys())
+        return sum(c.get_haircutted_ue_valuation() for c in self.collateral.keys())
 
     def get_mc_size(self):
-        current_haircutted_collateral = self.get_haircutted_collateral_value()
+        current_haircutted_collateral = self.get_haircutted_collateral_valuation()
         return self.principal - current_haircutted_collateral
 
     def fulfil_margin_call(self):
@@ -109,7 +109,7 @@ class Repo(Loan):
             amount2firesell = self.future_margin_call - self.future_max_collateral
             self.liabilityParty.sell_assets_proportionally(amount2firesell)
 
-    def get_haircutted_collateral_value(self):
+    def get_haircutted_collateral_valuation(self):
         return sum(a.get_price() * quantity * (1.0 - a.get_haircut())
                    for (a, quantity) in self.collateral.items()) + self.cash_collateral
 
@@ -139,7 +139,7 @@ class Repo(Loan):
         if remainder <= eps:
             return
 
-        initial_collateral = self.get_haircutted_collateral_value()
+        initial_collateral = self.get_haircutted_collateral_valuation()
         if initial_collateral > 0:
             _factor = remainder / initial_collateral
 
@@ -179,4 +179,4 @@ class Repo(Loan):
         print("Principal of the Repo is ", self.principal)
         print("Amount already pulled is ", self.get_funding_already_pulled())
         print("Amount of collateral needed is ", (self.principal - self.get_funding_already_pulled()))
-        print("Current value of collateral is ", self.get_haircutted_collateral_value())
+        print("Current value of collateral is ", self.get_haircutted_collateral_valuation())

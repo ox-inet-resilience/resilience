@@ -29,15 +29,15 @@ class LCR_Constraint(object):
         return lw_putforsale + lw_funding_pulled
 
     def get_inflows(self):
-        return sum(a.get_value() * a.get_LCR_weight() for
+        return sum(a.get_valuation() * a.get_LCR_weight() for
                    a in self.me.get_ledger().get_all_assets())
 
     def get_outflows(self):
         ldg = self.me.get_ledger()
-        outflows = sum(l.get_value() * l.get_LCR_weight() for
+        outflows = sum(l.get_valuation() * l.get_LCR_weight() for
                        l in ldg.get_all_liabilities()
                        if not l.ctype == 'Other')
-        outflows += ldg.get_liability_value_of(Other) * self.me.LCR_weight_other
+        outflows += ldg.get_liability_valuation_of(Other) * self.me.LCR_weight_other
         return outflows
 
     def get_LCR_denominator(self) -> np.longdouble:
@@ -57,7 +57,7 @@ class LCR_Constraint(object):
         return outflows - min(inflows, BASELIII_CASH_OUTFLOW_CAP * outflows)
 
     def get_gov_bonds(self):
-        return sum(a.get_value() for a in self.me.get_tradable_of_type('govbonds'))
+        return sum(a.get_valuation() for a in self.me.get_tradable_of_type('govbonds'))
 
     def get_HQLA(self, cash_raised=0) -> np.longdouble:
         """

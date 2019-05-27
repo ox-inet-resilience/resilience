@@ -12,7 +12,7 @@ class Shares(Contract):
         super().__init__(owner, issuer)
         self.nShares = nShares
         self.originalNumberOfShares = nShares
-        self.previousValueOfShares = self.get_new_value()
+        self.previousValueOfShares = self.get_new_valuation()
         self.originalNAV = originalNAV
         self.nSharesPendingToRedeem = 0
 
@@ -32,14 +32,14 @@ class Shares(Contract):
         self.nShares -= number
         self.nSharesPendingToRedeem -= number
 
-    def get_value(self):
+    def get_valuation(self):
         return self.previousValueOfShares
 
-    def get_new_value(self):
-        return self.nShares * self.liabilityParty.get_net_asset_value()
+    def get_new_valuation(self):
+        return self.nShares * self.liabilityParty.get_net_asset_valuation()
 
     def get_NAV(self):
-        return self.liabilityParty.get_net_asset_value()
+        return self.liabilityParty.get_net_asset_valuation()
 
     def get_nShares(self):
         return self.nShares
@@ -50,9 +50,9 @@ class Shares(Contract):
     def is_eligible(self, me):
         return (me == self.assetParty) and self.nShares > 0
 
-    def update_value(self):
-        valueChange = self.get_new_value() - self.previousValueOfShares
-        self.previousValueOfShares = self.get_new_value()
+    def update_valuation(self):
+        valueChange = self.get_new_valuation() - self.previousValueOfShares
+        self.previousValueOfShares = self.get_new_valuation()
         return
 
         # accounting disabled because AM Investor is disabled

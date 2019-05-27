@@ -111,8 +111,8 @@ class Institution(Agent):
 
         return eligibleActions
 
-    def get_equity_value(self) -> np.longdouble:
-        return self.get_ledger().get_equity_value() if self.is_alive() else self.equityAtDefault
+    def get_equity_valuation(self) -> np.longdouble:
+        return self.get_ledger().get_equity_valuation() if self.is_alive() else self.equityAtDefault
 
     def get_tradable_of_type(self, atype):
         if not self.has_tradable_cache:
@@ -157,13 +157,13 @@ class Institution(Agent):
         self.encumberedCash -= amount
 
     def receive_shock_to_asset(self, assetType, fractionLost) -> None:
-        assetsShocked = [asset for asset in
+        assets_tobe_shocked = [asset for asset in
                          self.get_ledger().get_all_assets() if
                          hasattr(asset, 'get_asset_type') and
                          asset.get_asset_type() == assetType]
 
-        for asset in assetsShocked:
-            self.get_ledger().devalue_asset(asset, asset.get_value() * fractionLost)
+        for asset in assets_tobe_shocked:
+            self.get_ledger().devalue_asset(asset, asset.get_valuation() * fractionLost)
             asset.update_price()
 
     def get_matured_obligations(self):
@@ -213,10 +213,10 @@ class Institution(Agent):
 
     def get_equity_loss(self):
         initial_equity = self.get_ledger().get_initial_equity()
-        return (self.get_equity_value() - initial_equity) / initial_equity
+        return (self.get_equity_valuation() - initial_equity) / initial_equity
 
-    def set_initial_values(self) -> None:
-        self.get_ledger().set_initial_values()
+    def set_initial_valuations(self) -> None:
+        self.get_ledger().set_initial_valuations()
 
     # methods after this line is merged from Behaviour class
     def choose_actions(self):
@@ -238,7 +238,7 @@ class Institution(Agent):
             self.choose_actions()
         except DefaultException:
             self.marked_as_default = True
-            self.equityAtDefault = self.get_equity_value()
+            self.equityAtDefault = self.get_equity_valuation()
             # self.trigger_default()
             self.alive = False
             if hasattr(self, 'isaBank') and self.isaBank:

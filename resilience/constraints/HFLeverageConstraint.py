@@ -22,7 +22,7 @@ class HFLeverageConstraint(object):
     def get_effective_min_leverage(self):
         ldg = self.me.get_ledger()
         cash = self.me.get_cash_()  # TODO or unencumbered cash?
-        collateral = cash + ldg.get_asset_value_of(AssetCollateral)
+        collateral = cash + ldg.get_asset_valuation_of(AssetCollateral)
         assert collateral >= 0, collateral
 
         if collateral == 0:
@@ -30,13 +30,13 @@ class HFLeverageConstraint(object):
 
         w_cash = cash / collateral
         _tradable = ldg.get_assets_of_type(AssetCollateral)
-        repo = ldg.get_liability_value_of(Repo)
+        repo = ldg.get_liability_valuation_of(Repo)
         # Sometimes _denominator is 0
-        _denominator = w_cash + sum((1 - t.get_haircut()) * t.get_value() for t in _tradable) / collateral
+        _denominator = w_cash + sum((1 - t.get_haircut()) * t.get_valuation() for t in _tradable) / collateral
         elligible_asset_minimum = repo / _denominator if _denominator > 0 else 0
 
-        other = ldg.get_asset_value_of(Other)
-        external = ldg.get_asset_value_of(TradableAsset, self.ASSETTYPE.EXTERNAL1)
+        other = ldg.get_asset_valuation_of(Other)
+        external = ldg.get_asset_valuation_of(TradableAsset, self.ASSETTYPE.EXTERNAL1)
         A_minimum = elligible_asset_minimum + other + external
         if A_minimum > 0:
             lev_min = (A_minimum - repo) / A_minimum
@@ -60,7 +60,7 @@ class HFLeverageConstraint(object):
         if not is_below_buffer:
             # leverage ratio is still at safe zone
             return 0.0
-        E = self.me.get_equity_value()
+        E = self.me.get_equity_valuation()
         current = E / lev
         target = E / self.get_leverage_target(eml)
         return current - target

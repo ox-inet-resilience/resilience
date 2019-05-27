@@ -10,10 +10,10 @@ class Hedgefund(LeveragedInst):
         self.leverage_constraint = HFLeverageConstraint(self)
 
     def get_cash_buffer(self):
-        return self.get_ledger().get_asset_value() * self.model.parameters.HF_CASH_BUFFER_AS_FRACTION_OF_ASSETS
+        return self.get_ledger().get_asset_valuation() * self.model.parameters.HF_CASH_BUFFER_AS_FRACTION_OF_ASSETS
 
     def get_HQLA_target(self):
-        return self.get_ledger().get_asset_value() * self.model.parameters.HF_CASH_TARGET_AS_FRACTION_OF_ASSETS
+        return self.get_ledger().get_asset_valuation() * self.model.parameters.HF_CASH_TARGET_AS_FRACTION_OF_ASSETS
 
     def trigger_default(self):
         super().trigger_default()
@@ -76,7 +76,7 @@ class Hedgefund(LeveragedInst):
         """
         super().perform_liquidity_management()
         # 5. HF raise liquidity to reach cash target
-        A = self.get_ledger().get_asset_value()
+        A = self.get_ledger().get_asset_valuation()
         if A == 0:  # to make sure there is no divide-by-zero
             return
         uec = self.get_ue_cash()
