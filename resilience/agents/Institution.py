@@ -163,7 +163,7 @@ class Institution(Agent):
                          asset.get_asset_type() == assetType]
 
         for asset in assets_tobe_shocked:
-            self.get_ledger().devalue_asset(asset, asset.get_valuation() * fractionLost)
+            self.get_ledger().devalue_asset(asset, asset.get_valuation('A') * fractionLost)
             asset.update_price()
 
     def get_matured_obligations(self):

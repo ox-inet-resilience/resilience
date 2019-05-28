@@ -32,7 +32,7 @@ class Shares(Contract):
         self.nShares -= number
         self.nSharesPendingToRedeem -= number
 
-    def get_valuation(self):
+    def get_valuation(self, side):
         return self.previousValueOfShares
 
     def get_new_valuation(self):

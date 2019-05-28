@@ -36,7 +36,7 @@ class AssetCollateral(TradableAsset):
     def get_haircutted_ue_valuation(self):
         return self.get_unencumbered_valuation() * (1 - self.get_haircut())
 
-    def get_valuation(self):
+    def get_valuation(self, side):
         return self.quantity * self.price
 
     def change_ownership(self, newOwner, quantity):

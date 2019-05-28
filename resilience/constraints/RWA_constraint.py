@@ -44,7 +44,7 @@ class RWA_Constraint(object):
         # external assets
         rw += weights['external'] * ldg.get_asset_valuation_of(TradableAsset, self.ASSETTYPE.EXTERNAL1)
         # loan
-        rw += weights['loan'] * sum((l.get_valuation() - l.get_funding_already_pulled()) for l in ldg.get_assets_of_type(Loan))
+        rw += weights['loan'] * sum((l.get_valuation('A') - l.get_funding_already_pulled()) for l in ldg.get_assets_of_type(Loan))
         # repo
-        rw += weights['repo'] * sum((l.get_valuation() - l.get_funding_already_pulled()) for l in ldg.get_assets_of_type(Repo))
+        rw += weights['repo'] * sum((l.get_valuation('A') - l.get_funding_already_pulled()) for l in ldg.get_assets_of_type(Repo))
         return rw

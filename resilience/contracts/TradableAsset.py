@@ -42,7 +42,7 @@ class TradableAsset(Contract):
         if (quantity == 0) or (self.price <= eps):
             # do not perform if quantity or price is 0
             return
-        effective_qty = self.get_valuation() / self.price
+        effective_qty = self.get_valuation('A') / self.price
         if abs(effective_qty - quantity) <= 2 * eps:
             quantity = effective_qty
         assert effective_qty - quantity >= -eps, (effective_qty - quantity)
@@ -51,7 +51,7 @@ class TradableAsset(Contract):
         # self.assetParty.get_ledger().devalue_asset(self, quantity * self.price)
         self.assetMarket.put_for_sale(self, quantity)
 
-    def get_valuation(self):
+    def get_valuation(self, side):
         return self.quantity * self.price
 
     def get_price(self):

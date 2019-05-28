@@ -32,7 +32,7 @@ class Bond(Contract):
         # if this is a Gvt bond, an interbank bond or a non-me bond, the agent gets a SellBond action with the correct parameters
         return False
 
-    def get_valuation(self):
+    def get_valuation(self, side):
         return self.principal
 
     def get_maturity_type(self):

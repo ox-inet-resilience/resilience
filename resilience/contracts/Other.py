@@ -24,7 +24,7 @@ class Other(Contract):
     def get_notional(self):
         return self.principal
 
-    def get_valuation(self):
+    def get_valuation(self, side):
         return self.get_notional()
 
     def set_amount(self, amount):

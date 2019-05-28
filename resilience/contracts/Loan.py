@@ -77,7 +77,7 @@ class Loan(Contract):
     def get_notional(self):
         return self.principal
 
-    def get_valuation(self):
+    def get_valuation(self, side):
         # In general, the valuation of a contract may differ from its
         # notional depending on whether it is computed from the asset side or
         # liability side

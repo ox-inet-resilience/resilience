@@ -14,7 +14,7 @@ TODO: sphinx this
 - T_{ia}: AssetCollateral (with AssetType MBS, EQUITIES, CORPORATE_BONDS, GOV_BONDS)
 
 - R: inst.get_asset_valuation_of(Repo)
-- R_{ij}: [r.get_valuation() for r in inst.get_ledger().get_assets_of_type(Repo) if r.get_liability_party() == fi_j]
+- R_{ij}: [r.get_valuation('A') for r in inst.get_ledger().get_assets_of_type(Repo) if r.get_liability_party() == fi_j]
 - \\bar{R}: inst.get_liability_valuation_of(Repo)
 - O: inst.get_asset_valuation_of(Other)
 - \\bar{O}: inst.get_liability_valuation_of(Other)
@@ -22,7 +22,7 @@ TODO: sphinx this
 
 ## 4.1.1 Bank only contracts
 - I_i: inst.get_asset_valuation_of(Loan)
-- I_{ij}: [l.get_valuation() for l in inst.get_ledger().get_assets_of_type(Loan) if l.get_liability_party() == bank_j]
+- I_{ij}: [l.get_valuation('A') for l in inst.get_ledger().get_assets_of_type(Loan) if l.get_liability_party() == bank_j]
 - \\bar{I}_i: inst.get_liability_valuation_of(Loan)
 - D_i: inst.get_asset_valuation_of(Deposit)
 
