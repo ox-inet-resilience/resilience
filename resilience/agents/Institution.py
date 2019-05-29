@@ -107,7 +107,7 @@ class Institution(Agent):
         for contract in (self.get_ledger().get_all_assets() + self.get_ledger().get_all_liabilities()):
             if contract.is_eligible(self):
                 action = contract.get_action(self)
-                eligibleActions[type(action)].append(action)
+                eligibleActions[type(action).__name__].append(action)
 
         return eligibleActions
 
@@ -247,4 +247,4 @@ class Institution(Agent):
         logging.debug(f"{self.get_name()} done.\n*********")
 
     def get_all_actions_of_type(self, actionType):
-        return self.availableActions[actionType]
+        return self.availableActions[actionType.__name__]
