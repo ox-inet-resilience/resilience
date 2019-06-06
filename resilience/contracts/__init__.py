@@ -6,6 +6,5 @@ from .Deposit import Deposit
 from .Loan import Loan
 from .Other import Other
 from .Shares import Shares
-from .LongTermUnsecured import LongTermUnsecured
 #from .Bond import Bond
 #from .MaturityType import MaturityType

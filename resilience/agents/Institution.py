@@ -6,7 +6,6 @@ from economicsl import Agent
 
 from ..contracts import FailedMarginCallException
 from ..contracts import AssetCollateral, Deposit, Other, Repo
-from ..contracts.LongTermUnsecured import LongTermUnsecured
 from ..behaviours import sell_assets_proportionally
 
 from ..parameters import eps
@@ -47,7 +46,7 @@ class Institution(Agent):
             - otherAsset
             Liabilities:
             - deposits
-            - longTerm
+            - longTerm (not used)
             - otherLiability (initialized in model)
         """
         cash, equities, corp_bonds, gov_bonds, other_tradable, otherAsset = assets
@@ -67,7 +66,9 @@ class Institution(Agent):
         if (deposits > 0):
             self.add(Deposit(None, self, deposits))
         if (longTerm > 0):
-            self.add(LongTermUnsecured(self, longTerm))
+            # LongTermUnsecured has been removed
+            # TODO remove this from args
+            pass
 
     def pay_liability(self, amount, loan) -> None:
         """
