@@ -15,7 +15,7 @@ Or if you want to reproduce the paper's result, you have to install from `v0.2`
 pip install git+https://github.com/ox-inet-resilience/resilience@v0.2
 ```
 
-Alternatively, you could `git clone` the repo and run `python setup.py install`.
+Alternatively, you could `git clone` the repo and run `pip install .`.
 
 # Components
 
