@@ -14,7 +14,7 @@ class Bond(Contract):
         self.assetParty.append(self)
         self.liabilityParty.append(self)
 
-    def get_name(self, me):
+    def get_name(self):
         return "Bond. NOT IMPLEMENTED WHY ARE YOU USING ME???"
 
     def get_action(self, me):

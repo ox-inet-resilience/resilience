@@ -22,15 +22,10 @@ class Loan(Contract):
     def get_LCR_weight(self):
         return self.parameters.INTERBANK_LCR
 
-    def get_name(self, me):
-        if me == self.assetParty:
-            if self.liabilityParty is None:
-                return "Loan to external node"
-            return "Loan to " + self.liabilityParty.get_name()
-        else:
-            if self.assetParty is None:
-                return "Loan from external node"
-            return "Loan from " + self.assetParty.get_name()
+    def get_name(self):
+        _from = "external node" if self.assetParty is None else self.assetParty.get_name()
+        _to = "external node" if self.liabilityParty is None else self.liabilityParty.get_name()
+        return f"Loan from {_from} to {_to}"
 
     def pay_loan(self, amount):
         # update the amount required to be paid because it could have decreased due to bail-in

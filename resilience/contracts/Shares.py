@@ -18,11 +18,10 @@ class Shares(Contract):
 
         assert issuer is not None
 
-    def get_name(self, me):
-        if me == self.assetParty:
-            return "Shares of the firm: " + self.liabilityParty.get_name()
-        else:
-            return "Shares owned by our shareholder " + self.assetParty.get_name()
+    def get_name(self):
+        ass = self.assetParty.get_name()
+        lia = self.liabilityParty.get_name()
+        return f"Shares of the firm: {lia} owned by shareholder {ass}"
 
     def redeem(self, number, amount):
         assert number <= self.nShares

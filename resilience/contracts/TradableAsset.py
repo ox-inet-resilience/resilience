@@ -24,7 +24,7 @@ class TradableAsset(Contract):
         self.ASSETTYPE = assetParty.model.parameters.AssetType
         self.lcr_weight = assetParty.model.parameters.EXTERNAL_LCR if assetType == self.ASSETTYPE.EXTERNAL1 else 0
 
-    def get_name(self, me):
+    def get_name(self):
         return "Asset of type " + str(self.assetType)
 
     def get_action(self, me):

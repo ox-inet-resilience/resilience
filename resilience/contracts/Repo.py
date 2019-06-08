@@ -25,14 +25,10 @@ class Repo(Loan):
     def get_LCR_weight(self):
         return self.parameters.REPO_LCR
 
-    def get_name(self, me):
-        if me == self.assetParty:
-            return ("Reverse-repo to " + self.liabilityParty.get_name() if
-                    self.liabilityParty is not None
-                    else "Reverse-repo to uninitialised Institution")
-        else:
-            _from = self.assetParty.get_name() if self.assetParty is not None else "uninitialised Institution"
-            return "Repo from %s to %s" % (_from, self.liabilityParty.get_name())
+    def get_name(self):
+        _from = self.assetParty.get_name() if self.assetParty is not None else "uninitialised Institution"
+        _to = self.liabilityParty.get_name() if self.liabilityParty is not None else "uninitialised Institution"
+        return f"Repo from {_from} to {_to}"
 
     def pledge_collateral(self, asset, quantity):
         asset.encumber(quantity)

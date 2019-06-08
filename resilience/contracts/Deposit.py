@@ -13,5 +13,5 @@ class Deposit(Loan):
     def get_LCR_weight(self):
         return self.parameters.DEPOSITS_LCR
 
-    def get_name(self, me):
+    def get_name(self):
         return "Deposits"

@@ -18,7 +18,7 @@ class Other(Contract):
     def get_LCR_weight(self):
         return self.parameters.OTHER_LCR
 
-    def get_name(self, me):
+    def get_name(self):
         return "Other"
 
     def get_notional(self):
