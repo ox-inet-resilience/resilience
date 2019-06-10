@@ -1,4 +1,5 @@
 from setuptools import setup, find_packages
+from Cython.Build import cythonize
 
 install_requires = [
     'py-economicsl@git+https://github.com/ox-inet-resilience/py-economicsl@master',
@@ -14,5 +15,6 @@ setup(name='resilience',
       author_email='rhtbot@protonmail.com',
       license='Apache',
       packages=find_packages(),
+      ext_modules=cythonize(['resilience/contracts/%s.py' % i for i in ['TradableAsset', 'AssetCollateral', 'Loan']]),
       install_requires=install_requires,
       zip_safe=False)

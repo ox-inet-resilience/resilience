@@ -1,5 +1,5 @@
 from ..actions import SellAsset
-from economicsl import Contract
+from economicsl.contract import Contract
 from ..parameters import eps
 
 
