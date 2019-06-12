@@ -6,6 +6,12 @@ install_requires = [
     'numpy'
 ]
 
+cys = (
+    ['resilience/contracts/%s.py' % i for i in ['TradableAsset', 'AssetCollateral', 'Loan']] +
+    ['resilience/markets/%s.py' %i for i in ['Market', 'AssetMarket']]
+)
+
+
 setup(name='resilience',
       version='0.2',
       description='System-wide stress testing',
@@ -15,6 +21,6 @@ setup(name='resilience',
       author_email='rhtbot@protonmail.com',
       license='Apache',
       packages=find_packages(),
-      ext_modules=cythonize(['resilience/contracts/%s.py' % i for i in ['TradableAsset', 'AssetCollateral', 'Loan']]),
+      ext_modules=cythonize(),
       install_requires=install_requires,
       zip_safe=False)

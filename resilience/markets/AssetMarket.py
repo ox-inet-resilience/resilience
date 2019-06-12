@@ -55,10 +55,8 @@ class AssetMarket(Market):
     def __init__(self, model):
         super().__init__(model)
         self.prices = defaultdict(lambda: 1.0)
-        self.priceImpacts = {}
         # The total quantities sold during the most recent market clearing
         self.quantities_sold = defaultdict(np.longdouble)
-        self.haircuts = {}
         # The cumulative total quantities sold from the earliest market clearing to
         # the most recent one
         self.cumulative_quantities_sold = defaultdict(np.longdouble)
