@@ -15,8 +15,8 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
+            pip install pytest pytest-cov Cython
             pip install .
-            pip install pytest pytest-cov
       - run:
           name: lint & test
           command: |
