@@ -21,6 +21,6 @@ setup(name='resilience',
       author_email='rhtbot@protonmail.com',
       license='Apache',
       packages=find_packages(),
-      ext_modules=cythonize(),
+      ext_modules=cythonize(cys),
       install_requires=install_requires,
       zip_safe=False)
