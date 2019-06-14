@@ -11,4 +11,4 @@ cdef class AssetCollateral(TradableAsset):
     cpdef double get_unencumbered_valuation(self)
     cpdef double get_haircutted_ue_valuation(self)
     cpdef long double get_valuation(self, str side)
-    cpdef object change_ownership(self, object newOwner, object quantity)
+    cpdef object change_ownership(self, object newOwner, double quantity)

@@ -47,7 +47,7 @@ class AssetCollateral(TradableAsset):
         self.encumberedQuantity -= quantity
 
         # Have the owner lose the value of the asset
-        self.assetParty.get_ledger().devalue_asset(self, quantity * self.get_price())
+        self.assetParty.get_ledger().devalue_asset(self, quantity * self.price)
 
         new_asset = AssetCollateral(newOwner, self.get_asset_type(), self.assetMarket, quantity)
 
