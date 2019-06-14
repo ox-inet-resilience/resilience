@@ -3,12 +3,15 @@ from .Market cimport Market
 
 cdef double linear_price_impact(double fraction, double param)
 
+# This is an internal C-only class
+@cython.final
 cdef class Order:
     cdef object asset
     cdef double quantity
-    cpdef void settle(self)
+    cdef void settle(self)
 
 
+@cython.final
 cdef class AssetMarket(Market):
     cdef object prices
     cdef object quantities_sold
@@ -19,6 +22,7 @@ cdef class AssetMarket(Market):
     cdef object priceImpacts
     cdef object haircuts
     cpdef void put_for_sale(self, object asset, double quantity)
+    @cython.locals(order = Order)
     cpdef void clear_the_market(self)
     @cython.locals(current_price = double, price_impact = double, total = double, fraction_sold = double, new_price = double)
     cpdef void compute_price_impact(self, int assetType, double qty_sold)
