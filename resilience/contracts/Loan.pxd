@@ -16,6 +16,7 @@ cdef class Loan(Contract):
     cpdef bint is_eligible(self, object me)
     cpdef double get_notional(self)
     cpdef long double get_valuation(self, str side)
+    @cython.locals(LGD = double, notional = cython.longdouble)
     cpdef void liquidate(self)
     cpdef void increase_funding_pulled(self, long double fundingPulled)
     cpdef double get_funding_already_pulled(self)
