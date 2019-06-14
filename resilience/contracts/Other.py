@@ -3,20 +3,20 @@ from ..actions import PayLoan
 
 
 class Other(Contract):
-    __slots__ = 'parameters', 'principal', '_payloan', 'fundingAlreadyPulled'
+    __slots__ = 'principal', '_payloan', 'fundingAlreadyPulled', 'lcr_weight'
     ctype = 'Other'
 
     # TODO: See the TODO in the definition of Deposit
     def __init__(self, assetParty, liabilityParty, amount):
         super().__init__(assetParty, liabilityParty)
         _model = (assetParty or liabilityParty).model
-        self.parameters = _model.parameters
         self.principal = amount
         self._payloan = PayLoan(liabilityParty, self)
-        self.fundingAlreadyPulled = 0
+        self.fundingAlreadyPulled = 0.0
+        self.lcr_weight = _model.parameters.OTHER_LCR
 
     def get_LCR_weight(self):
-        return self.parameters.OTHER_LCR
+        return self.lcr_weight
 
     def get_name(self):
         return "Other"
