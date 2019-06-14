@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages, Extension
 
 install_requires = [
-    'py-economicsl@git+https://github.com/ox-inet-resilience/py-economicsl@master',
+    'economicsl@git+https://github.com/ox-inet-resilience/py-economicsl@master',
     'numpy'
 ]
 
