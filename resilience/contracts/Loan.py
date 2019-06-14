@@ -1,7 +1,7 @@
 import logging
 
 from ..actions import PayLoan, PullFunding
-from economicsl import Contract
+from economicsl.contract import Contract
 from ..parameters import eps
 
 

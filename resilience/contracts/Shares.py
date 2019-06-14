@@ -1,7 +1,7 @@
 import logging
 
 from ..actions import RedeemShares
-from economicsl import Contract
+from economicsl.contract import Contract
 
 
 # This contract represents a bunch of shares of some Institution which can issue shares.

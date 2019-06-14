@@ -1,4 +1,4 @@
-from economicsl import Contract
+from economicsl.contract import Contract
 from ..actions import PayLoan
 
 
