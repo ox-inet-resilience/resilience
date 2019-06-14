@@ -10,7 +10,7 @@ cdef class TradableAsset(Contract):
     cdef public object _action
     cdef public object ASSETTYPE
     cdef public double lcr_weight
-    cpdef str get_name(self)
+    cpdef object get_name(self)
     cpdef object get_action(self, object me)
     cpdef bint is_eligible(self, object me)
     cpdef void put_for_sale(self, object quantity)
