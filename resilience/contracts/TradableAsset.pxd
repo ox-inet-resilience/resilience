@@ -1,7 +1,7 @@
 cimport cython
-cimport economicsl.contract
+from economicsl.contract cimport Contract
 
-cdef class TradableAsset(contract.Contract):
+cdef class TradableAsset(Contract):
     cdef public int assetType
     cdef public object assetMarket
     cdef public double price

@@ -7,13 +7,11 @@
 Requires Python 3. It is recommended to run everything within a virtualenv.
 Install the library by running the following commands
 ```python
-pip install Cython
 pip install git+https://github.com/ox-inet-resilience/resilience
 ```
 
 Or if you want to reproduce the paper's result, you have to install from `v0.2`
 ```python
-pip install Cython
 pip install git+https://github.com/ox-inet-resilience/resilience@v0.2
 ```
 

@@ -1,15 +1,13 @@
-from setuptools import setup, find_packages
-from Cython.Build import cythonize
+from setuptools import setup, find_packages, Extension
 
 install_requires = [
     'py-economicsl@git+https://github.com/ox-inet-resilience/py-economicsl@master',
     'numpy'
 ]
 
-cys = (
-    ['resilience/contracts/%s.py' % i for i in ['TradableAsset', 'AssetCollateral', 'Loan']] +
-    ['resilience/markets/%s.py' %i for i in ['Market', 'AssetMarket']]
-)
+extmods = [
+    Extension("resilience.contracts.%s" % i, sources=['resilience/contracts/%s.py' % i]) for i in ['TradableAsset', 'AssetCollateral', 'Loan']] + [
+        Extension("resilience.markets.%s" % i, sources=['resilience/markets/%s.py' % i]) for i in ['Market', 'AssetMarket']]
 
 
 setup(name='resilience',
@@ -21,6 +19,7 @@ setup(name='resilience',
       author_email='rhtbot@protonmail.com',
       license='Apache',
       packages=find_packages(),
-      ext_modules=cythonize(cys),
+      ext_modules=extmods,
+      setup_requires=['setuptools>=18.0', 'cython'],
       install_requires=install_requires,
       zip_safe=False)
