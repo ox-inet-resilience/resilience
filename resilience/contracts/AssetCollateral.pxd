@@ -1,6 +1,12 @@
-import cython
+# cython: language_level=3
+cimport cython
 from .TradableAsset cimport TradableAsset
 
+cdef double eps
+
+# This class must not be subclassed
+# TODO fix that enabling final doesn't raise error
+#@cython.final
 cdef class AssetCollateral(TradableAsset):
     cdef public double encumberedQuantity
     cpdef bint is_eligible(self, object me)

@@ -1,6 +1,8 @@
 cimport cython
 from economicsl.contract cimport Contract
 
+cdef double eps
+
 cdef class Loan(Contract):
     cdef public object parameters
     cdef public double principal
