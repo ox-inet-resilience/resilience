@@ -1,9 +1,13 @@
+# cython: language_level=3, infer_types=True
 cimport cython
 from economicsl.contract cimport Contract
+from ..markets.AssetMarket cimport AssetMarket
+
+cdef double eps
 
 cdef class TradableAsset(Contract):
     cdef public int assetType
-    cdef public object assetMarket
+    cdef public AssetMarket assetMarket
     cdef public double price
     cdef public double quantity
     cdef public double putForSale_
@@ -13,7 +17,8 @@ cdef class TradableAsset(Contract):
     cpdef object get_name(self)
     cpdef object get_action(self, object me)
     cpdef bint is_eligible(self, object me)
-    cpdef void put_for_sale(self, object quantity)
+    @cython.locals(effective_qty = double)
+    cpdef void put_for_sale(self, double quantity)
     cpdef long double get_valuation(self, str side)
     cpdef double get_price(self)
     cpdef double get_market_price(self)
