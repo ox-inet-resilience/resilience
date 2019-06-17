@@ -21,9 +21,8 @@ class Repo(Loan):
         self.prev_margin_call = 0.0
         self.future_margin_call = 0.0
         self.future_max_collateral = 0.0
-
-    def get_LCR_weight(self):
-        return self.parameters.REPO_LCR
+        _model = (assetParty or liabilityParty).model
+        self.lcr_weight = _model.parameters.REPO_LCR
 
     def get_name(self):
         _from = self.assetParty.get_name() if self.assetParty is not None else "uninitialised Institution"
