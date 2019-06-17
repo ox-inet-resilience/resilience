@@ -6,7 +6,7 @@ install_requires = [
 ]
 
 extmods = [
-    Extension("resilience.contracts.%s" % i, sources=['resilience/contracts/%s.py' % i]) for i in ['TradableAsset', 'AssetCollateral', 'Loan']] + [
+    Extension("resilience.contracts.%s" % i, sources=['resilience/contracts/%s.py' % i]) for i in ['TradableAsset', 'AssetCollateral', 'Loan', 'Repo', 'Deposit']] + [
         Extension("resilience.markets.%s" % i, sources=['resilience/markets/%s.py' % i]) for i in ['Market', 'AssetMarket']]
 
 

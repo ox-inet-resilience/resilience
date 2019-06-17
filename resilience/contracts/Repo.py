@@ -165,7 +165,7 @@ class Repo(Loan):
         #self.liabilityParty.get_ledger().devalue_liability(self, self.principal)
         self.principal = 0
 
-    def printCollateral(self):
+    def print_collateral(self):
         print("\nCollateral of ", self.liabilityParty.get_name())
         for k, v in self.collateral.items():
             asset = k
