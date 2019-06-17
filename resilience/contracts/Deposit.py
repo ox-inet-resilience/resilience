@@ -9,9 +9,8 @@ class Deposit(Loan):
 
     def __init__(self, depositor, holder, amount):
         super().__init__(depositor, holder, amount)
-
-    def get_LCR_weight(self):
-        return self.parameters.DEPOSITS_LCR
+        _model = (depositor or holder).model
+        self.lcr_weight = _model.parameters.DEPOSITS_LCR
 
     def get_name(self):
         return "Deposits"
