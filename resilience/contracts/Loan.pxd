@@ -10,6 +10,8 @@ cdef class Loan(Contract):
     # must be public because it is overrided by BailinablePullFunding in bail-in paper
     cdef public object _pullfunding
     cdef object _payloan
+    cdef public double lcr_weight
+    cdef public double LGD
     cpdef double get_LCR_weight(self)
     cpdef object get_name(self)
     cpdef void pay_loan(self, long double amount)
