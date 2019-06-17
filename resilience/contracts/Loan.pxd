@@ -9,7 +9,7 @@ cdef class Loan(Contract):
     cdef public double fundingAlreadyPulled
     # must be public because it is overriden by BailinablePullFunding in bail-in paper
     cdef public object _pullfunding
-    cdef object _payloan
+    cdef public object _payloan
     cdef public double lcr_weight
     cdef public double LGD
     cpdef double get_LCR_weight(self)
