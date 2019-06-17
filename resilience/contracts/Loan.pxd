@@ -7,7 +7,7 @@ cdef class Loan(Contract):
     cdef public object parameters
     cdef public double principal
     cdef public double fundingAlreadyPulled
-    # must be public because it is overrided by BailinablePullFunding in bail-in paper
+    # must be public because it is overriden by BailinablePullFunding in bail-in paper
     cdef public object _pullfunding
     cdef object _payloan
     cdef public double lcr_weight
