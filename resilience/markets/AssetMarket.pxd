@@ -22,11 +22,11 @@ cdef class AssetMarket(Market):
     cdef object priceImpacts
     cdef object haircuts
     cpdef void put_for_sale(self, object asset, double quantity)
-    @cython.locals(order = Order)
+    @cython.locals(order=Order)
     cpdef void clear_the_market(self)
-    @cython.locals(current_price = double, price_impact = double, total = double, fraction_sold = double, new_price = double)
+    @cython.locals(current_price=double, price_impact=double, total=double, fraction_sold=double, new_price=double)
     cpdef void compute_price_impact(self, int assetType, double qty_sold)
-    @cython.locals(h0 = double, p0 = double, alpha = double, newHaircut = double)
+    @cython.locals(h0=double, p0=double, alpha=double, newHaircut=double)
     cpdef void compute_haircut(self, int assetType, double qty_sold)
     cpdef double get_price(self, int assetType)
     cpdef double get_haircut(self, int assetType)

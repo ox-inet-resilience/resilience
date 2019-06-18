@@ -1,0 +1,11 @@
+cimport cython
+
+cdef class RWA_Constraint:
+    cdef object me
+    cdef object ASSETTYPE
+    cpdef long double get_RWCR_min(self)
+    cpdef bint is_insolvent(self, object cached_equity=*)
+    cpdef bint is_below_buffer(self, object cached_equity=*)
+    cpdef long double get_RWA_ratio(self, object cached_equity=*)
+    @cython.locals(ldg=object, weights=object, rw=double, val=double)
+    cpdef long double get_RWA(self)

@@ -17,7 +17,7 @@ cdef class TradableAsset(Contract):
     cpdef object get_name(self)
     cpdef object get_action(self, object me)
     cpdef bint is_eligible(self, object me)
-    @cython.locals(effective_qty = double)
+    @cython.locals(effective_qty=double)
     cpdef void put_for_sale(self, double quantity)
     cpdef long double get_valuation(self, str side)
     cpdef double get_price(self)
