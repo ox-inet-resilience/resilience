@@ -188,6 +188,11 @@ class Institution(Agent):
         for obligation in self.get_obligation_inbox():
             if not obligation.is_fulfilled():
                 index = obligation.get_time_to_pay() - self.get_time() - 1
+                # Caution: this is the time when python's feature of negative
+                # indexing becomes detrimental and hides bugs.
+                # If index is negative, it means that an agent might have
+                # skipped the step to check matured obligations
+                assert index >= 0, (index, obligation.get_time_to_pay(), self.get_time())
                 cashCommitments[index] += obligation.get_amount()
         return cashCommitments
 
