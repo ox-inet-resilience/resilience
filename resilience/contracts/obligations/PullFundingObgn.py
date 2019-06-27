@@ -16,5 +16,5 @@ class PullFundingObgn(Obligation):
                       self.loan.get_asset_party().get_name() +
                       " an amount %.2f." % self.amount)
 
-        self.loan.reduce_pull_funding_amount(self.amount)
+        self.loan.reduce_funding_pulled(self.amount)
         self.set_fulfilled()

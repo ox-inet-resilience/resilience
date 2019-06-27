@@ -60,9 +60,6 @@ class Loan(Contract):
             logging.debug("This loan between " + (self.assetParty.get_name() if self.assetParty else 'None') + ' and ' + (self.liabilityParty.get_name() if self.liabilityParty else 'None') + " has been fully repaid.")
             # TODO: Destroy the loan
 
-    def reduce_pull_funding_amount(self, amount):
-        self.fundingAlreadyPulled -= amount
-
     def get_action(self, me):
         if self.assetParty == me:
             return self._pullfunding
@@ -101,6 +98,9 @@ class Loan(Contract):
 
     def increase_funding_pulled(self, fundingPulled):
         self.fundingAlreadyPulled += fundingPulled
+
+    def reduce_funding_pulled(self, amount):
+        self.fundingAlreadyPulled -= amount
 
     def get_funding_already_pulled(self):
         return self.fundingAlreadyPulled
