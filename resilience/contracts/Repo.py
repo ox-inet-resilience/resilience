@@ -11,7 +11,10 @@ from ..parameters import eps
 #
 # @author rafa
 class Repo(Loan):
-    __slots__ = 'collateral', 'cash_collateral', 'prev_margin_call', 'future_margin_call', 'future_max_collateral'
+    __slots__ = (
+        'collateral', 'cash_collateral', 'prev_margin_call', 'future_margin_call', 'future_max_collateral',
+        'MARGIN_CALL_ON', 'POSTDEFAULT_FIRESALE_CONTAGION'
+    )
     ctype = 'Repo'
 
     def __init__(self, assetParty, liabilityParty, principal):
@@ -23,6 +26,10 @@ class Repo(Loan):
         self.future_max_collateral = 0.0
         _model = (assetParty or liabilityParty).model
         self.lcr_weight = _model.parameters.REPO_LCR
+        # These method are used for checking MARGIN_CALL_ON and
+        # POSTDEFAULT_FIRESALE_CONTAGION
+        self.MARGIN_CALL_ON = _model.parameters.MARGIN_CALL_ON
+        self.POSTDEFAULT_FIRESALE_CONTAGION = _model.parameters.POSTDEFAULT_FIRESALE_CONTAGION
 
     def get_name(self):
         _from = self.assetParty.get_name() if self.assetParty is not None else "uninitialised Institution"
@@ -60,7 +67,7 @@ class Repo(Loan):
         """
         equation 39
         """
-        if not self.parameters.MARGIN_CALL_ON:
+        if not self.MARGIN_CALL_ON:
             return
         borrower = self.liabilityParty
         if borrower is not None and borrower.isaBank:
@@ -153,7 +160,7 @@ class Repo(Loan):
             # Give the new asset to the new owner
             self.assetParty.add(newAsset)
 
-            if self.parameters.POSTDEFAULT_FIRESALE_CONTAGION:
+            if self.POSTDEFAULT_FIRESALE_CONTAGION:
                 newAsset.put_for_sale(newAsset.quantity)
 
         # 3. Reduce the notional of this repo to zero.
