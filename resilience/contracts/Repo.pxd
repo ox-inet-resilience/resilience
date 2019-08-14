@@ -8,6 +8,7 @@ cdef class Repo(Loan):
     cdef public long double future_max_collateral
     cdef public bint MARGIN_CALL_ON
     cdef public bint POSTDEFAULT_FIRESALE_CONTAGION
+    cdef public object parameters
     cpdef object get_name(self)
     cpdef void pledge_collateral(self, object asset, long double quantity)
     cpdef long double pledge_cash_collateral(self, long double amount)

@@ -13,7 +13,7 @@ from ..parameters import eps
 class Repo(Loan):
     __slots__ = (
         'collateral', 'cash_collateral', 'prev_margin_call', 'future_margin_call', 'future_max_collateral',
-        'MARGIN_CALL_ON', 'POSTDEFAULT_FIRESALE_CONTAGION'
+        'MARGIN_CALL_ON', 'POSTDEFAULT_FIRESALE_CONTAGION', 'parameters'
     )
     ctype = 'Repo'
 
@@ -25,11 +25,14 @@ class Repo(Loan):
         self.future_margin_call = 0.0
         self.future_max_collateral = 0.0
         _model = (assetParty or liabilityParty).model
-        self.lcr_weight = _model.parameters.REPO_LCR
+        self.parameters = _model.parameters
         # These method are used for checking MARGIN_CALL_ON and
         # POSTDEFAULT_FIRESALE_CONTAGION
         self.MARGIN_CALL_ON = _model.parameters.MARGIN_CALL_ON
         self.POSTDEFAULT_FIRESALE_CONTAGION = _model.parameters.POSTDEFAULT_FIRESALE_CONTAGION
+
+    def get_LCR_weight(self):
+        return self.parameters.REPO_LCR
 
     def get_name(self):
         _from = self.assetParty.get_name() if self.assetParty is not None else "uninitialised Institution"
