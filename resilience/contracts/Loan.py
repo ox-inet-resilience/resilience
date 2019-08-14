@@ -6,26 +6,21 @@ from ..parameters import eps
 
 
 class Loan(Contract):
-    __slots__ = 'principal', 'fundingAlreadyPulled', '_pullfunding', '_payloan', 'lcr_weight', 'LGD'
+    __slots__ = 'principal', 'fundingAlreadyPulled', 'parameters', '_pullfunding', '_payloan'
     ctype = 'Loan'
 
     def __init__(self, assetParty, liabilityParty, principal):
         super().__init__(assetParty, liabilityParty)
         _model = (assetParty or liabilityParty).model
+        self.parameters = _model.parameters
         self.principal = principal
         self.fundingAlreadyPulled = 0
         # PERF for caching purpose
-        if assetParty is not None:
-            self._pullfunding = PullFunding(assetParty, self)
+        self._pullfunding = PullFunding(assetParty, self)
         self._payloan = PayLoan(liabilityParty, self)
-        if _model.parameters.ENDOGENOUS_LGD_ON:
-            self.LGD = self.liabilityParty.endogenous_LGD
-        else:
-            self.LGD = _model.parameters.INTERBANK_LOSS_GIVEN_DEFAULT
-        self.lcr_weight = _model.parameters.INTERBANK_LCR
 
     def get_LCR_weight(self):
-        return self.lcr_weight
+        return self.parameters.INTERBANK_LCR
 
     def get_name(self):
         _from = "external node" if self.assetParty is None else self.assetParty.get_name()
@@ -43,7 +38,7 @@ class Loan(Contract):
             #    # TODO fix accounting where assetParty does pull_funding
             #    self.liabilityParty.send_cash(self.assetParty, amount)
         if self.assetParty is not None:
-        # elif self.assetParty is not None:
+        #elif self.assetParty is not None:
             # the case when external node pays back to asset party, which
             # happens instantaneously
             self.assetParty.get_ledger().pull_funding(amount, self)
@@ -83,12 +78,16 @@ class Loan(Contract):
     def liquidate(self):
         if self.assetParty is None:
             return
+        if self.parameters.ENDOGENOUS_LGD_ON:
+            LGD = self.liabilityParty.endogenous_LGD
+        else:
+            LGD = self.parameters.INTERBANK_LOSS_GIVEN_DEFAULT
         notional = self.get_notional()
         # TODO uncomment this for correct accounting
         # NOTE: the ledger keeps track of valuation, not
         # notional!
         # self.assetParty.get_ledger().devalue_asset(self, notional)
-        self.assetParty.add_cash(notional * (1.0 - self.LGD))
+        self.assetParty.add_cash(notional * (1.0 - LGD))
         # TODO uncomment this for correct accounting
         # NOTE: the ledger keeps track of valuation, not
         # notional!
