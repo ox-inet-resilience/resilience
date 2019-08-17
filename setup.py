@@ -12,7 +12,7 @@ extmods = [
 
 
 setup(name='resilience',
-      version='0.2',
+      version='0.3',
       description='System-wide stress testing',
       url='https://github.com/ox-inet-resilience/resilience',
       keywords='abm stress-testing',
