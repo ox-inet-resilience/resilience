@@ -22,19 +22,19 @@ class LCR_Constraint(object):
     def get_LCR_denominator_correction(self) -> np.longdouble:
         # due to firesale and pullfunding
         ldg = self.me.get_ledger()
-        lw_putforsale = sum(t.putForSale_ * t.price * t.get_LCR_weight() for t in ldg.get_assets_of_type(AssetCollateral))
+        lw_putforsale = sum(t.putForSale_ * t.price * t.lcr_weight for t in ldg.get_assets_of_type(AssetCollateral))
         lw_funding_pulled = (
-            sum(l.get_funding_already_pulled() * l.get_LCR_weight() for l in ldg.get_assets_of_type(Loan)) +
-            sum(r.get_funding_already_pulled() * r.get_LCR_weight() for r in ldg.get_assets_of_type(Repo)))
+            sum(l.get_funding_already_pulled() * l.lcr_weight for l in ldg.get_assets_of_type(Loan)) +
+            sum(r.get_funding_already_pulled() * r.lcr_weight for r in ldg.get_assets_of_type(Repo)))
         return lw_putforsale + lw_funding_pulled
 
     def get_inflows(self):
-        return sum(a.get_valuation('A') * a.get_LCR_weight() for
+        return sum(a.get_valuation('A') * a.lcr_weight for
                    a in self.me.get_ledger().get_all_assets())
 
     def get_outflows(self):
         ldg = self.me.get_ledger()
-        outflows = sum(l.get_valuation('L') * l.get_LCR_weight() for
+        outflows = sum(l.get_valuation('L') * l.lcr_weight for
                        l in ldg.get_all_liabilities()
                        if not l.ctype == 'Other')
         outflows += ldg.get_liability_valuation_of(Other) * self.me.LCR_weight_other
