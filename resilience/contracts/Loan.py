@@ -100,6 +100,7 @@ class Loan(Contract):
 
     def reduce_funding_pulled(self, amount):
         self.fundingAlreadyPulled -= amount
+        self.fundingAlreadyPulled = max(0, self.fundingAlreadyPulled)
 
     def get_funding_already_pulled(self):
         return self.fundingAlreadyPulled
