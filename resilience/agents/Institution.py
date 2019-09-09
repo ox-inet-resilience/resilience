@@ -253,4 +253,7 @@ class Institution(Agent):
         logging.debug(f"{self.get_name()} done.\n*********")
 
     def get_all_actions_of_type(self, actionType):
-        return self.availableActions[actionType.__name__]
+        try:
+            return self.availableActions[actionType.__name__]
+        except KeyError:
+            return []
