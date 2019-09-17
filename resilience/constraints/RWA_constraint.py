@@ -3,6 +3,9 @@ from ..contracts import Other, Loan, Repo, TradableAsset
 from ..parameters import eps
 
 
+def get_notional_minus_pulled(ldg, ctype):
+    return sum((l.get_notional() - l.get_funding_already_pulled()) for l in ldg.get_assets_of_type(ctype))
+
 class RWA_Constraint(object):
     __slots__ = 'me', 'ASSETTYPE'
 
@@ -44,7 +47,7 @@ class RWA_Constraint(object):
         # external assets
         rw += weights['external'] * ldg.get_asset_valuation_of(TradableAsset, self.ASSETTYPE.EXTERNAL1)
         # loan
-        rw += weights['loan'] * sum((l.get_valuation('A') - l.get_funding_already_pulled()) for l in ldg.get_assets_of_type(Loan))
+        rw += weights['loan'] * get_notional_minus_pulled(ldg, Loan)
         # repo
-        rw += weights['repo'] * sum((l.get_valuation('A') - l.get_funding_already_pulled()) for l in ldg.get_assets_of_type(Repo))
+        rw += weights['repo'] * get_notional_minus_pulled(ldg, Repo)
         return rw
