@@ -63,8 +63,9 @@ class Loan(Contract):
 
     def is_eligible(self, me):
         notional = self.get_notional()
-        return (notional > 0) and (notional > self.get_funding_already_pulled())
-        # TODO: include assetParty.is_alive() and liabilityParty.isAlive()
+        asset_alive = self.assetParty is None or self.assetParty.alive
+        liability_alive = self.liabilityParty is None or self.liabilityParty.alive
+        return (notional > 0) and (notional > self.get_funding_already_pulled()) and asset_alive and liability_alive
 
     def get_notional(self):
         return self.principal
