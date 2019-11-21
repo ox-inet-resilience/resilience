@@ -387,7 +387,7 @@ class Bank(LeveragedInst):
     def trigger_default(self):
         super().trigger_default()
 
-        cash_raised = self.get_cash_()
+        cash_raised = self.get_cash()
         # The ordering is loans liquidation, firesale, pullfunding (reverse
         # repo then interbank), but this ordering does not affect the result
         # in any way

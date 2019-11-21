@@ -21,7 +21,7 @@ class HFLeverageConstraint(object):
 
     def get_effective_min_leverage(self):
         ldg = self.me.get_ledger()
-        cash = self.me.get_cash_()  # TODO or unencumbered cash?
+        cash = self.me.get_cash()  # TODO or unencumbered cash?
         collateral = cash + ldg.get_asset_valuation_of(AssetCollateral)
         assert collateral >= 0, collateral
 

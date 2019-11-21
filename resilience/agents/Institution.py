@@ -215,7 +215,7 @@ class Institution(Agent):
         # returns unencumberedCash
         # the method name is chosen instead of getUnEncumberedCash so it is not accidentally read as
         # getEncumberedCash
-        return self.get_cash_() - self.get_encumbered_cash()
+        return self.get_cash() - self.get_encumbered_cash()
 
     def get_equity_loss(self):
         initial_equity = self.get_ledger().get_initial_equity()

@@ -8,7 +8,7 @@ TODO: sphinx this
 - A: inst.get_ledger().get_asset_valuation()
 - L: inst.get_ledger().get_liability_valuation()
 - E: inst.get_equity_valuation()
-- C: inst.get_cash_()
+- C: inst.get_cash()
 - T: inst.get_asset_valuation_of(AssetCollateral)
   encumbered value: sum(a.get_encumbered_valuation() for a in inst.get_ledger().get_assets_of_type(AssetCollateral))
 - T_{ia}: AssetCollateral (with AssetType MBS, EQUITIES, CORPORATE_BONDS, GOV_BONDS)

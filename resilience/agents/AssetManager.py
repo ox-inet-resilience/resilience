@@ -106,6 +106,6 @@ class AssetManager(Institution):
 
         # 3) Firesell extra assets to get enough cash if it is too low
         _A = self.get_ledger().get_asset_valuation()
-        _C = self.get_cash_()
+        _C = self.get_cash()
         if _C / _A < 0.9 * self.cash_fraction_initial:
             self.sell_assets_proportionally(_A * self.cash_fraction_initial - _C)
