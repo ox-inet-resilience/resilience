@@ -1,3 +1,4 @@
+# cython: infer_types=True
 import logging
 
 from ..actions import PayLoan, PullFunding
