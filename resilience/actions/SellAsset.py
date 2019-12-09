@@ -26,7 +26,7 @@ class SellAsset(Action):
         return self.asset.get_unencumbered_valuation() - self.asset.putForSale_ * self.asset.price
 
     def print(self):
-        print(f"Sell Asset action by {self.asset.get_asset_party().getName()}"
+        print(f"Sell Asset action by {self.asset.get_asset_party().get_name()}"
               f"-> asset type: {self.asset.get_asset_type()}, amount: "
               "%.2f" % self.get_amount())
 

@@ -48,5 +48,5 @@ class PullFunding(Action):
                       f" -> amount {self.get_amount()}"
                       f", borrower is {self.loan.get_liability_party().get_name()}")
 
-    def getName(self):
+    def get_name(self):
         return f"Pull Funding from {self.loan.get_liability_party().get_name()} [max: {self.get_max()}]"
