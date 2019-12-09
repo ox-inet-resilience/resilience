@@ -10,6 +10,9 @@ class PayLoan(Action):
         self.loan = loan
         self.parameters = (loan.assetParty or loan.liabilityParty).model.parameters
 
+    def get_loan(self):
+        return self.loan
+
     def perform(self):
         super().perform()
         if not self.parameters.FUNDING_CONTAGION_INTERBANK:
@@ -23,6 +26,8 @@ class PayLoan(Action):
         self.loan.pay_loan(self.get_amount())
 
     def get_max(self):
+        # Truncate max to be always positive because
+        # sometimes it is a negative infinitesimal number.
         return max(0, self.loan.get_notional() - self.loan.get_funding_already_pulled())
 
     def print(self):
@@ -32,6 +37,3 @@ class PayLoan(Action):
         asset_party = self.loan.get_asset_party()
         ap_name = 'unspecified lender' if asset_party is None else asset_party.get_name()
         return f"Pay Loan to {ap_name} [max: {self.get_max()}]"
-
-    def get_loan(self):
-        return self.loan

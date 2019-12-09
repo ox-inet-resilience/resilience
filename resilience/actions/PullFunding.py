@@ -1,8 +1,5 @@
-import logging
-
-from ..contracts.obligations import PullFundingObgn
-
 from economicsl import Action
+from ..contracts.obligations import PullFundingObgn
 
 
 class PullFunding(Action):
@@ -39,14 +36,14 @@ class PullFunding(Action):
             self.loan.get_asset_party().send_obligation(self.loan.get_liability_party(), obligation)
 
     def get_max(self):
-        # Truncate max to be always positive
-        # Sometimes it is a negative infinitesimal number
+        # Truncate max to be always positive because
+        # sometimes it is a negative infinitesimal number.
         return max(0, self.loan.get_notional() - self.loan.get_funding_already_pulled())
 
     def print(self):
-        logging.debug(f"Pull Funding action by {self.loan.get_asset_party().get_name()}"
-                      f" -> amount {self.get_amount()}"
-                      f", borrower is {self.loan.get_liability_party().get_name()}")
+        print(f"Pull Funding action by {self.loan.get_asset_party().get_name()}"
+              f" -> amount {self.get_amount()}"
+              f", borrower is {self.loan.get_liability_party().get_name()}")
 
     def get_name(self):
         return f"Pull Funding from {self.loan.get_liability_party().get_name()} [max: {self.get_max()}]"
