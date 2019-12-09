@@ -2,8 +2,6 @@ from economicsl import Action
 
 
 # the Payloan action represents the chance to pay back a loan that the agent has on its liability side.
-#
-# Its perform function takes one parameter: amount.
 class PayLoan(Action):
     __slots__ = 'loan', 'parameters'
 
