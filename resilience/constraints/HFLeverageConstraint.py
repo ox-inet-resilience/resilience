@@ -6,8 +6,8 @@ from ..contracts import TradableAsset, AssetCollateral, Repo, Other
 class HFLeverageConstraint(object):
     r"""
     Hedge fund's leverage constraint is calculated just like bank's except that
-    the params differ for each hedge fund. They are being offset by an effective
-    average haircut
+    the params differ for each hedge fund. Additionally, an effective minimum
+    leverage is used to calculate the leverage buffer and leverage target.
     1 > \lambda_{buffer} (HF leverage buffer) > \lambda_{min} (HF minimum leverage)
     """
     __slots__ = 'me', 'ASSETTYPE'
