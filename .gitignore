@@ -1,0 +1,11 @@
+*.iml
+*.xml
+*.class
+*.DS_Store
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+# cython-generated files
+*.so
+*.c
+*.html
