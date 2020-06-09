@@ -19,6 +19,10 @@ pip install git+https://github.com/ox-inet-resilience/resilience@v0.7
 Alternatively, you could `git clone` the repo and run `pip install .`.
 
 For a self-contained introduction to the model in fewer than 1k lines of code, see https://github.com/ox-inet-resilience/firesale_stresstest.
+The `firesale_stresstest` repository implements all of its building block from scratch instead of using the Resilience library.
+It reproduces the result of Cont-Schaanning 2017.
+
+For a similar implementation of `firesale_stresstest` but instead built using the Resilience building blocks, see `examples/cont_schaanning_2017.py`.
 
 # Components
 
