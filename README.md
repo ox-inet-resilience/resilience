@@ -1,6 +1,6 @@
 # Resilience
 
-[![CircleCI branch](https://img.shields.io/circleci/project/github/ox-inet-resilience/resilience/master.svg)](https://circleci.com/gh/ox-inet-resilience/resilience)
+[![CircleCI branch](https://img.shields.io/circleci/project/github/ox-inet-resilience/resilience/master.svg)](https://circleci.com/gh/ox-inet-resilience/resilience)  
 This is a library containing building blocks used in Foundations of System-Wide Stress Testing (SWST).
 
 # Usage
