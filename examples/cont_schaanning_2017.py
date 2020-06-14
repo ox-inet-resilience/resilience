@@ -139,6 +139,7 @@ class Model:
             self.simulation.bank_defaults_this_round = 0
             # this is an extra safeguard to ensure order independence
             random.shuffle(self.allAgents)
+            self.simulation.process_postbox()
             # In most agent-based models, there is only step().  We
             # split it into step() and act() phases to ensure order
             # independence in some conditions. In the full model,
