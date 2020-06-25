@@ -128,6 +128,12 @@ class Model:
             self.assetMarket.total_quantities[AssetType.CORPORATE_BONDS1] += corp_bonds
             self.allAgents.append(bank)
 
+    def process_mailboxes(self):
+        self.simulation.process_postbox()
+        # Check inboxes
+        for agent in self.allAgents:
+            agent.step()
+
     def run_simulation(self):
         self.apply_initial_shock(
             Parameters.ASSET_TO_SHOCK,
@@ -139,17 +145,19 @@ class Model:
             self.simulation.bank_defaults_this_round = 0
             # this is an extra safeguard to ensure order independence
             random.shuffle(self.allAgents)
-            self.simulation.process_postbox()
-            # In most agent-based models, there is only step().  We
-            # split it into step() and act() phases to ensure order
-            # independence in some conditions. In the full model,
-            # trigger_default() may contain a behavioural unit that
-            # does pull funding.
-            for agent in self.allAgents:
-                agent.step()
+            self.process_mailboxes()
             self.assetMarket.clear_the_market()
             for agent in self.allAgents:
+                agent.act_fulfil_contractual_obligations()
+            # This second process_mailboxes() is necessary so that all banks
+            # receive cash from the contractual obligations (the substep just
+            # above this) on time.
+            self.process_mailboxes()
+            for agent in self.allAgents:
                 agent.act()
+            for agent in self.allAgents:
+                if agent.marked_as_default:
+                    agent.trigger_default()
             defaults.append(self.simulation.bank_defaults_this_round)
             total_sold.append(
                 sum(self.assetMarket.cumulative_quantities_sold.values()) /

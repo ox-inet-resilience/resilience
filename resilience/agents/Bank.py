@@ -303,12 +303,19 @@ class LeveragedInst(Institution):
 
         return _raised
 
-    def choose_actions(self):
-        # 0. Pay matured cash commitments or default.
-        self.pay_matured_cash_commitments_or_default()
+    def act_fulfil_contractual_obligations(self):
+        if not self.is_alive():
+            logging.debug(f"{self.get_name()} cannot act. I'm crucified, dead and buried, and have descended into hell.")
+            return
 
+        try:
+            # Pay matured cash commitments or default.
+            self.pay_matured_cash_commitments_or_default()
+        except DefaultException:
+            self.handle_default()
+
+    def choose_actions(self):
         if not self.isaBank:
-            # 0b. Run margin calls or default.
             # only hedgefunds do this
             # see https://resilience.zulipchat.com/#narrow/stream/122180-SimulationsOrganised/subject/FF2/near/135901302
             self.fulfil_margin_calls_or_default()

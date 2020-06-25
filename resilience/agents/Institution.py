@@ -228,6 +228,20 @@ class Institution(Agent):
     def choose_actions(self):
         pass
 
+    def act_fulfil_contractual_obligations(self):
+        pass
+
+    def handle_default(self):
+        # This marked_as_default is necessary because
+        # trigger_default( needs to be a separate loop from
+        # act(), to ensure order independence.
+        self.marked_as_default = True
+        self.equityAtDefault = self.get_equity_valuation()
+        # self.trigger_default()
+        self.alive = False
+        if hasattr(self, 'isaBank') and self.isaBank:
+            self.simulation.bank_defaults_this_round += 1
+
     def act(self) -> None:
         if not self.is_alive():
             logging.debug(f"{self.get_name()} cannot act. I'm crucified, dead and buried, and have descended into hell.")
@@ -243,12 +257,7 @@ class Institution(Agent):
         try:
             self.choose_actions()
         except DefaultException:
-            self.marked_as_default = True
-            self.equityAtDefault = self.get_equity_valuation()
-            # self.trigger_default()
-            self.alive = False
-            if hasattr(self, 'isaBank') and self.isaBank:
-                self.simulation.bank_defaults_this_round += 1
+            self.handle_default()
 
         logging.debug(f"{self.get_name()} done.\n*********")
 

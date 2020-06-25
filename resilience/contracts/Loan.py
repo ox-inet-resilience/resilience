@@ -35,11 +35,11 @@ class Loan(Contract):
         if self.liabilityParty is not None:
             self.liabilityParty.pay_liability(amount, self)
             self.liabilityParty.get_ledger().subtract_cash(amount)
-            #if self.assetParty is not None:
-            #    # TODO fix accounting where assetParty does pull_funding
-            #    self.liabilityParty.send_cash(self.assetParty, amount)
-        if self.assetParty is not None:
-        #elif self.assetParty is not None:
+            if self.assetParty is not None:
+                # TODO fix accounting where assetParty does pull_funding
+                self.liabilityParty.send_cash(self.assetParty, amount)
+        #if self.assetParty is not None:
+        elif self.assetParty is not None:
             # the case when external node pays back to asset party, which
             # happens instantaneously
             self.assetParty.get_ledger().pull_funding(amount, self)
