@@ -32,7 +32,7 @@ class Parameters:
 
     # INTERBANK liquidity hoarding threshold
     MARGIN_CALL_ON = False
-    INTERBANK_LOSS_GIVEN_DEFAULT = 0.4  # if Interbank contagion is off
+    INTERBANK_LOSS_GIVEN_DEFAULT = 1.00
     ENDOGENOUS_LGD_ON = False
 
     # Cash Provider
