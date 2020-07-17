@@ -30,7 +30,7 @@ class AssetManager(Institution):
         self.update_valuation_of_all_shares()
         return Shares(owner, self, quantity, self.get_net_asset_valuation())
 
-    def get_net_asset_valuation(self) -> np.longdouble:
+    def get_net_asset_valuation(self) -> float:
         # This condition is added to avoid divide-by-zero
         if self.nShares > 0:
             return self.get_equity_valuation() / self.nShares
@@ -42,7 +42,7 @@ class AssetManager(Institution):
     def step(self):
         super().step()
 
-    def get_equity_loss(self) -> np.longdouble:
+    def get_equity_loss(self) -> float:
         return 0.0
 
     def pay_matured_cash_commitments_or_default(self) -> None:

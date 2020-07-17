@@ -43,17 +43,17 @@ class HFLeverageConstraint(object):
             return lev_min
         return 0
 
-    def get_leverage_buffer(self, eml=None) -> np.longdouble:
+    def get_leverage_buffer(self, eml=None) -> float:
         if eml is None:
             eml = self.get_effective_min_leverage()
         return (self.me.LEVERAGE_INITIAL - eml) / 3 + eml
 
-    def get_leverage_target(self, eml=None) -> np.longdouble:
+    def get_leverage_target(self, eml=None) -> float:
         if eml is None:
             eml = self.get_effective_min_leverage()
         return (self.me.LEVERAGE_INITIAL - eml) * 2 / 3 + eml
 
-    def get_amount_to_delever(self) -> np.longdouble:
+    def get_amount_to_delever(self) -> float:
         lev = self.me.get_leverage()
         eml = self.get_effective_min_leverage()
         is_below_buffer = lev < self.get_leverage_buffer(eml)

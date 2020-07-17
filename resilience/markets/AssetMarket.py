@@ -56,13 +56,13 @@ class AssetMarket(Market):
         super().__init__(model)
         self.prices = defaultdict(lambda: 1.0)
         # The total quantities sold during the most recent market clearing
-        self.quantities_sold = defaultdict(np.longdouble)
+        self.quantities_sold = defaultdict(float)
         # The cumulative total quantities sold from the earliest market clearing to
         # the most recent one
-        self.cumulative_quantities_sold = defaultdict(np.longdouble)
+        self.cumulative_quantities_sold = defaultdict(float)
         self.orderbook = []
         self.oldPrices = {}
-        self.total_quantities = defaultdict(np.longdouble)
+        self.total_quantities = defaultdict(float)
 
         self.priceImpacts = self.model.parameters.PRICE_IMPACTS
         # copy the value instead of accessing it directly
@@ -95,7 +95,7 @@ class AssetMarket(Market):
 
             self.cumulative_quantities_sold[atype] += v
 
-        self.quantities_sold = defaultdict(np.longdouble)
+        self.quantities_sold = defaultdict(float)
 
         # 2. Perform the sale
         for order in self.orderbook:

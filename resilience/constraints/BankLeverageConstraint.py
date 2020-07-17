@@ -12,7 +12,7 @@ class BankLeverageConstraint(object):
     def __init__(self, me) -> None:
         self.me = me
 
-    def get_leverage_buffer(self) -> np.longdouble:
+    def get_leverage_buffer(self) -> float:
         # If bank-specific leverage buffer does not exist, fallback to global
         # constant
         return getattr(self.me, 'leverage_buffer',
@@ -23,13 +23,13 @@ class BankLeverageConstraint(object):
         insolvent = lev < (self.me.model.parameters.BANK_LEVERAGE_MIN - eps)
         return insolvent
 
-    def get_leverage_target(self) -> np.longdouble:
+    def get_leverage_target(self) -> float:
         # If bank-specific leverage target does not exist, fallback to global
         # constant
         return getattr(self.me, 'leverage_target',
                        self.me.model.parameters.BANK_LEVERAGE_TARGET)
 
-    def get_amount_to_delever(self) -> np.longdouble:
+    def get_amount_to_delever(self) -> float:
         r"""
         Deleverage just enough to reach \lambda_{target}
         Ref: Cont and Schaanning 2017

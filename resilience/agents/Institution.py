@@ -112,7 +112,7 @@ class Institution(Agent):
 
         return eligibleActions
 
-    def get_equity_valuation(self) -> np.longdouble:
+    def get_equity_valuation(self) -> float:
         return self.get_ledger().get_equity_valuation() if self.is_alive() else self.equityAtDefault
 
     def get_tradable_of_type(self, atype):

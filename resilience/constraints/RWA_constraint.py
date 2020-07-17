@@ -13,7 +13,7 @@ class RWA_Constraint(object):
         self.me = me
         self.ASSETTYPE = me.model.parameters.AssetType
 
-    def get_RWCR_min(self) -> np.longdouble:
+    def get_RWCR_min(self) -> float:
         if hasattr(self.me, 'RWCR_FLTF'):
             return self.me.RWCR_FLTF
         return self.me.model.parameters.RWCR_FLTF
@@ -26,13 +26,13 @@ class RWA_Constraint(object):
         rwa_ratio = self.get_RWA_ratio(cached_equity)
         return rwa_ratio < self.me.RWCR_buffer
 
-    def get_RWA_ratio(self, cached_equity=None) -> np.longdouble:
+    def get_RWA_ratio(self, cached_equity=None) -> float:
         CET1E = self.me.get_CET1E(cached_equity)
         RWA = self.get_RWA()
         assert RWA > 0, RWA
         return CET1E / RWA
 
-    def get_RWA(self) -> np.longdouble:
+    def get_RWA(self) -> float:
         ldg = self.me.get_ledger()
         weights = self.me.RWA_weights
         rw = 0
