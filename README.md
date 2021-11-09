@@ -13,9 +13,9 @@ Install the library by running the following commands
 pip install git+https://github.com/ox-inet-resilience/resilience
 ```
 
-Or if you want to reproduce the SWST paper's result, you have to install from `v0.7`
+Or if you want to reproduce the SWST paper's result, you have to install from `v0.8`
 ```python
-pip install git+https://github.com/ox-inet-resilience/resilience@v0.7
+pip install git+https://github.com/ox-inet-resilience/resilience@v0.8
 ```
 
 Alternatively, you could `git clone` the repo and run `pip install .`.
