@@ -36,10 +36,6 @@ class Parameters:
 
     # Cash Provider
     HAIRCUT_SLOPE = 100  # 0.2
-    LCR_THRESHOLD_TO_RUN = -3.0
-    LEVERAGE_THRESHOLD_TO_RUN = 0.0075
-    CP_FRACTION_TO_RUN = 0.3
-    TRIAL_PERIOD = 5
 
     # Hedgefund parameters
     HF_CASH_BUFFER_AS_FRACTION_OF_ASSETS = 0.04

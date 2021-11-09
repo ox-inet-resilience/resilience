@@ -50,6 +50,3 @@ Asset Manager:
 Asset Manager Investor:
 - AM-investor A_i = S_i
 - AM-investor L_i = 0
-
-Cash Provider:
-- CP A_i = R_i
