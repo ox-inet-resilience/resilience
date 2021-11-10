@@ -1,6 +1,6 @@
 # Resilience
 
-[![CircleCI branch](https://img.shields.io/circleci/project/github/ox-inet-resilience/resilience/master.svg)](https://circleci.com/gh/ox-inet-resilience/resilience)  
+[![CircleCI branch](https://github.com/ox-inet-resilience/resilience/workflows/build/badge.svg)](https://github.com/ox-inet-resilience/resilience/actions/workflows/ci.yml)  
 This is a library containing building blocks used in Foundations of System-Wide Stress Testing (SWST).
 For the news announcement, see https://www.inet.ox.ac.uk/news/foundations-of-system-wide-financial-stress-testing-with-heterogeneous-institutions/.
 For access to the working paper, see https://www.bankofengland.co.uk/working-paper/2020/foundations-of-system-wide-financial-stress-testing-with-heterogeneous-institutions.
