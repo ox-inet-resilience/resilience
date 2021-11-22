@@ -37,8 +37,17 @@ class Loan(Contract):
             self.liabilityParty.get_ledger().subtract_cash(amount)
             if self.assetParty is not None:
                 # TODO fix accounting where assetParty does pull_funding
-                self.liabilityParty.send_cash(self.assetParty, amount)
-        #if self.assetParty is not None:
+                # TODO we currently make the asset party receiving the cash
+                # simultaneously. Because the principal is reduced immediately
+                # in this function. Delaying the cash receival will cause and
+                # even worse order-dependent result. Ideally, the 3 steps of:
+                # 1. liability party subtracts its cash
+                # 2. asset party receives cash
+                # 3. the loan principal is reduced to 0
+                # should happen at the same time. The only way to do that is to
+                # delay this pay_loan to the mailbox processing subround.
+                #self.liabilityParty.send_cash(self.assetParty, amount)
+                self.assetParty.get_ledger().add_cash(amount)
         elif self.assetParty is not None:
             # the case when external node pays back to asset party, which
             # happens instantaneously
